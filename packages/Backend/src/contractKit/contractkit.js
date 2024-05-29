@@ -6,10 +6,14 @@ const {ContractKit, newKit} = require("@celo/contractkit")
 //import { ContractKit, newKit } from '@celo/contractkit'
 const {Account} = require("web3-core")
 //import { Account } from 'web3-core'
+
+
 require('dotenv').config();
 
 const ISSUER_PRIVATE_KEY = process.env.ISSUER_PRIVATE_KEY;
-console.log('the private key is',ISSUER_PRIVATE_KEY)
+
+console.log(`ISSUER_PRIVATE_KEY: ${ISSUER_PRIVATE_KEY}`); // For debugging purposes
+
 
 const ALFAJORES_RPC = 'https://alfajores-forno.celo-testnet.org'
 
