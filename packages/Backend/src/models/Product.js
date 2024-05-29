@@ -1,29 +1,36 @@
 const { Timestamp } = require("mongodb");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const { type } = require("os");
 
 const {Schema} = mongoose;
 
-const  TransactionSchema = new Schema({
+const  ProductSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true,
        
       },
+      amount:{
+        type:String,
+        required:true
+
+      },
     
-    amount:{
+    product_No:{
+        type:Schema.Types.String,
+        required:true,
+    },
+    Product_Image:{
         type:String,
         required:false,
     },
-    month:{
-        type:String,
-        required:false,
-    },
-    transactionType:{
+
+    product_track:{
         type:String,
         required:true,
-        enum:['utility','friends','transfers'],
-        default:'utility'
+        enum:['available','ondelivery','sold'],
+        default:'available'
     }
     
 
@@ -31,4 +38,4 @@ const  TransactionSchema = new Schema({
 {timestamps:true})
 
 
-module.exports = mongoose.models.Transaction || mongoose.model("Transaction", TransactionSchema);
+module.exports = mongoose.models.Product || mongoose.model("Product", ProductSchema);
