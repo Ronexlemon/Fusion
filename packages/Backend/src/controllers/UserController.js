@@ -1,186 +1,86 @@
 const asyncHandler = require("express-async-handler")
 
-const {getAllTotal,getAllFriendsTransaction,getAllUtilityTransaction,getAllTransactions,getAllTransfersTransaction,getAllFriendsTotalTransaction,getAllUtilityTotalTransaction,createTransaction,getAllMonthTotal} = require("../../services/transaction/transaction")
+const {createUser,authenticate} = require("../services/auth/user");
+
+const {hashPassword,compareHashPassword} = require("../hooks/hashComparePassword");
+
+const {generateAccessToken,generateRefreshToken} = require("../middleware/handleJwtTokens")
 
 
-
-
-const createATransaction = asyncHandler(async(req,res)=>{
-   
-    
-    const {transanctiontype,amount,month} = req.body;
+const register = asyncHandler(async(req,res)=>{
+    const {phoneNumber,password} = req.body;
     try{
-
-        const transaction = await createTransaction(req.user.id,transanctiontype,amount,month);
-        if(!transaction || transaction.length ==0){
-            return res.status(404).json({
-                status:false,
-                message:"No transactions Created"
+        const hashPass = await hashPassword(password);
+        const user = await createUser(phoneNumber,hashPass);
+        if(!user || user.length ==0){
+         return   res.status(400).json({
+                message:"User not created"
             })
-        }
-        await transaction.save();
-        return res.status(200).json({message:"created successively"}          
-        );
-    }catch(error){
-        console.log("error",error)
-        return res.status(500).json({message:"please try another time"})
+        }   
 
+        await user.save();
+
+       return res.status(200).json({
+            message:"User created successfully",
+            user
+        })
+
+
+    }catch(error){
+        console.log(error)
+
+return res.status(500).json({
+    message:"Internal server error",
+    error
+})
     }
 
-    
 })
 
 
+//loging
 
-const getAllTransaction = asyncHandler(async(req,res)=>{
-   
+const login = asyncHandler(async(req,res)=>{
+    const {phoneNumber,password} = req.body;
+
     try{
+        const user = await authenticate(phoneNumber);
 
-        const transactions = await getAllTransactions(req.user.id);
-        if(!transactions || transactions.length ==0){
-            return res.status(404).json({
-                status:false,
-                message:"No transactions found"
+        if(!user || user.length ==0){
+            return   res.status(400).json({
+                message:"confirm your credentials"
             })
+
         }
-        return res.status(200).json(
-            transactions
-        );
+        const passMatch = await compareHashPassword(password,user.password);
+        console.log("user id",user._id)
+       
+        if(passMatch){
+            const accestoken = await generateAccessToken(user.phoneNumber,user._id)
+
+            const refreshToken = await generateRefreshToken(user.phoneNumber,user._id)
+          
+          res.cookie("refreshToken",refreshToken,
+          {maxAge:24*60*60*1000,
+            httpOnly:true,
+            secure:false, // o be changed on production to true
+            sameSite:"None"});
+            res.status(200).json({userdata:user,accesstokens:accestoken});
+        }else{
+            res.status(400).json("Confirm your credentials");
+        };
+
+
     }catch(error){
-        return res.status(500).json({message:"please try another time"})
-
+        return res.status(500).json({
+            message:"Internal server error",
+            error
+        })
+        
     }
-
-    
-})
-
-//get all friends transactions
-const getFriendsTransaction = asyncHandler(async(req,res)=>{
-    
-    try{
-
-        const transactions = await getAllFriendsTransaction(req.user.id);
-        if(!transactions || transactions.length ==0){
-            return res.status(404).json({
-                status:false,
-                message:"No transactions found"
-            })
-        }
-        return res.status(200).json(
-            transactions
-        );
-    }catch(error){
-        return res.status(500).json({message:"please try another time"})
-
-    }
-
-    
-})
-
-//get all friends transactions
-const getUtilityTransaction = asyncHandler(async(req,res)=>{
-    
-    try{
-
-        const transactions = await getAllUtilityTransaction(req.user.id);
-        if(!transactions || transactions.length ==0){
-            return res.status(404).json({
-                status:false,
-                message:"No transactions found"
-            })
-        }
-        return res.status(200).json(
-            transactions
-        );
-    }catch(error){
-        return res.status(500).json({message:"please try another time"})
-
-    }
-
-    
 })
 
 
-//get all friends transactions
-const getTransfersTransaction = asyncHandler(async(req,res)=>{
-   
-    try{
-
-        const transactions = await getAllTransfersTransaction(req.user.id);
-        if(!transactions || transactions.length ==0){
-            return res.status(404).json({
-                status:false,
-                message:"No transactions found"
-            })
-        }
-        return res.status(200).json(
-            transactions
-        );
-    }catch(error){
-        return res.status(500).json({message:"please try another time"})
-
-    }
-
-    
-})
-
-
-
-//total
-
-const getTotalAmount = asyncHandler(async(req,res)=>{
-   
-    try{
-
-        const transactions = await getAllTotal(req.user.id);
-        if(!transactions || transactions.length ==0){
-            return res.status(404).json({
-                status:false,
-                message:"No transactions found"
-            })
-        }
-        return res.status(200).json(
-            transactions
-        );
-    }catch(error){
-        return res.status(500).json({message:"please try another time"})
-
-    }
-
-    
-})
-
-
-//get all mont total
-
-const getTotalMonthAmount = asyncHandler(async(req,res)=>{
-   
-    const {month} = req.body
-    try{
-
-        const transactions = await getAllMonthTotal(req.user.id,month);
-        if(!transactions || transactions.length ==0){
-            return res.status(404).json({
-                status:false,
-                message:"No transactions found"
-            })
-        }
-        return res.status(200).json(
-            transactions
-        );
-    }catch(error){
-        return res.status(500).json({message:"please try another time"})
-
-    }
-
-    
-})
-
-
-module.exports ={createATransaction,
-getTotalAmount,
-getAllTransaction,
-getTotalMonthAmount,
-getFriendsTransaction,
-getUtilityTransaction,
-getTransfersTransaction}
+module.exports = {register,
+    login
+}
