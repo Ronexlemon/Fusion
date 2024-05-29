@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"nodemon serve.js"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +16,8 @@
     "blind-threshold-bls": "https://github.com/celo-org/blind-threshold-bls-wasm#3d1013a",
     "dotenv": "^16.4.5",
     "ethers": "^6.11.1",
-    "nodemon": "^3.1.0",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.2",
     "web3-core": "^4.3.2"
   },
   "devDependencies": {
