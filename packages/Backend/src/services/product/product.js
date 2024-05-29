@@ -1,44 +1,86 @@
-const Transaction = require('../../models/Transaction')
+const Product = require('../../models/Product')
 
 
 //add transaction
+// const { Timestamp } = require("mongodb");
+// const mongoose = require("mongoose");
+// const { type } = require("os");
+
+// const {Schema} = mongoose;
+
+// const  ProductSchema = new Schema({
+//     user: {
+//         type: Schema.Types.ObjectId,
+//         ref: "User",
+//         required: true,
+       
+//       },
+//       amount:{
+//         type:String,
+//         required:true
+
+//       },
+    
+//     product_No:{
+//         type:Schema.Types.String,
+//         required:true,
+//     },
+//     Product_Image:{
+//         type:String,
+//         required:false,
+//     },
+
+//     product_track:{
+//         type:String,
+//         required:true,
+//         enum:['available','ondelivery','sold'],
+//         default:'available'
+//     }
+    
+
+// },
+// {timestamps:true})
 
 
-const createTransaction = async(user_id,transactionType,amount,month)=>{
+module.exports = mongoose.models.Product || mongoose.model("Product", ProductSchema);
 
-    const transaction = new Transaction({
-        user:user_id,
+
+const createProduct = async(user_id,product_track,amount,product_image,product_no)=>{
+
+    const transaction = new Product({
+        user: user_id,
         amount:amount,
-        month:month,
-        transactionType:transactionType,
+        product_track:product_track,
+        product_image: product_image,
+        product_no:product_no,
     })
-    return transaction;
+    return product;
 
 }
 
 //get all trnsactions
-const getAllTransactions =async(user_id)=>{
-    const transactions =  await Transaction.find({user:user_id})
+const getAllUserProducts =async(user_id)=>{
+    const transactions =  await Product.find({user:user_id})
     return transactions;
 }
 
 //get total amount of transaction
 
-const getAllFriendsTransaction = async(user_id)=>{
-    const transactions = await Transaction.find({user:user_id,transactionType:"friends"})
+const getAllAvailableProducts = async(user_id)=>{
+    const transactions = await Product.find({user:user_id, product_track:"available"})
     return transactions}
 
 
- const getAllUtilityTransaction = async(user_id)=>{
-        const transactions = await Transaction.find({transactionType:"utility"})
+ const getAllUserDeliveryTransaction = async(user_id)=>{
+        const transactions = await Product.find({user:user_id,product_track:"ondelivery"})
         return transactions}
 
-const getAllTransfersTransaction = async(user_id)=>{
-    const transactions = await Transaction.find({user:user_id,transactionType:"transfers"})
+const getAllSoldProduct = async(user_id)=>{
+    const transactions = await Product.find({user:user_id,product_track:"sold"})
     return transactions}
 
-const getAllUtilityTotalTransaction = async (user_id) => {
-    const utilityTransactions = await Transaction.find({user:user_id, transactionType: "utility" });
+const getAllAvailabeProductTotal = async (user_id) => {
+    const utilityTransactions = await Product.find({user:user_id, product_track: "available" });
     
     // Calculate total amount for utility transactions
     const totalAmount = utilityTransactions.reduce((total, transaction) => total + parseFloat(transaction.amount), 0);
@@ -46,16 +88,16 @@ const getAllUtilityTotalTransaction = async (user_id) => {
     return totalAmount;
 }
 
-const getAllFriendsTotalTransaction = async (user_id) => {
-    const utilityTransactions = await Transaction.find({user:user_id, transactionType: "friends" });
+const getAllDeliveryProductTotal = async (user_id) => {
+    const utilityTransactions = await Transaction.find({user:user_id, product_track:"ondelivery" });
     
     // Calculate total amount for utility transactions
     const totalAmount = utilityTransactions.reduce((total, transaction) => total + parseFloat(transaction.amount), 0);
     
     return totalAmount;
 }
-const getAllTransfersTotalTransaction = async (user_id) => {
-    const utilityTransactions = await Transaction.find({ user:user_id,transactionType: "transfers" });
+const getAllSoldProducts = async (user_id) => {
+    const utilityTransactions = await Transaction.find({ user:user_id,product_track:"sold" });
     
     // Calculate total amount for utility transactions
     const totalAmount = utilityTransactions.reduce((total, transaction) => total + parseFloat(transaction.amount), 0);
@@ -64,13 +106,13 @@ const getAllTransfersTotalTransaction = async (user_id) => {
 }
 
 const getAllTotal = async (user_id) => {
-    const transactions = await Transaction.find({user:user_id});
+    const transactions = await Product.find({user:user_id});
     
     // Object to store total amounts for each enum value
     const totalAmounts = {
-        utility: 0,
-        friends: 0,
-        transfers: 0
+        available: 0,
+        ondelivery: 0,
+        sold: 0
     };
     
     // Calculate total amount for each enum value
@@ -81,23 +123,50 @@ const getAllTotal = async (user_id) => {
     return totalAmounts;
 }
 
-const getAllMonthTotal = async (user_id,month) => {
-    const transactions = await Transaction.find({user:user_id,month:month});
-    
-    // Object to store total amounts for each enum value
-    const totalAmounts = {
-        utility: 0,
-        friends: 0,
-        transfers: 0
-    };
-    
-    // Calculate total amount for each enum value
-    transactions.forEach(transaction => {
-        totalAmounts[transaction.transactionType] += parseFloat(transaction.amount);
-    });
+const buyProduct = async(user_id,product_id)=>{
+    const product = await Product.findOneAndUpdate({ _id: product_id },{$set: {buyer: user_id,product_track: 'ondelivery' // or another status based on your logic
+            }
+        },
+        { new: true } // Return the updated document
+    );
+    return !!product;
 
-    return totalAmounts;
+   
 }
+
+const getAllBuyersProducts =async(user_id)=>{
+    const products = await Product.find({buyer:user_id});
+
+    return products;
+}
+
+const getAllBuyersBoughtProducts =async(user_id)=>{
+    const products = await Product.find({buyer:user_id,product_track: 'ondelivery'});
+
+    return products;
+}
+
+
+const getAllBuyersSoldProducts =async(user_id)=>{
+    const products = await Product.find({buyer:user_id,product_track: 'sold'});
+
+    return products;
+}
+
+
+const confirmSoldProduct = async(user_id)=>{
+    const product = await Product.findOneAndUpdate({ buyer: user_id },{$set: {product_track: 'sold' // or another status based on your logic
+            }
+        },
+        { new: true } // Return the updated document
+    );
+    return !!product;
+
+   
+}
+
+
+
 
 module.exports = {
     createTransaction,

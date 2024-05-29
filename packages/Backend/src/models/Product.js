@@ -31,6 +31,11 @@ const  ProductSchema = new Schema({
         required:true,
         enum:['available','ondelivery','sold'],
         default:'available'
+    },
+    buyer: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: false,
     }
     
 
