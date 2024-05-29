@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"nodemon serve.js"
+    "start": "nodemon serve.js"
   },
   "keywords": [],
   "author": "",
@@ -13,10 +13,16 @@
   "dependencies": {
     "@celo/contractkit": "^7.0.0",
     "@celo/identity": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "blind-threshold-bls": "https://github.com/celo-org/blind-threshold-bls-wasm#3d1013a",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ethers": "^6.11.1",
     "express": "^4.19.2",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.6.2",
+    "mongoose": "^8.4.0",
     "nodemon": "^3.1.2",
     "web3-core": "^4.3.2"
   },
