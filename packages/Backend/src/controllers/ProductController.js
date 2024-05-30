@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler")
 
-const {createProduct,getAllAvailabeProductTotal,getAllAvailableProducts,getAllBuyersProducts,getAllBuyersBoughtProducts,getAllBuyersSoldProducts,getAllDeliveryProductTotal,getAllSoldProduct,getAllSoldProducts,getAllTotal,getAllUserDeliveryTransaction,getAllUserProducts} = require("../services/product/product")
+const {createProduct,getAllAvailabeProductTotal,getAllAvailableProducts,getAllBuyersProducts,getAllBuyersBoughtProducts,getAllBuyersSoldProducts,getAllDeliveryProductTotal,getAllSoldProduct,buyProduct,getAllSoldProducts,getAllTotal,getAllUserDeliveryProducts,getAllUserProducts,confirmSoldProduct} = require("../services/product/product")
 
 
 
@@ -33,15 +33,15 @@ const createAProduct = asyncHandler(async(req,res)=>{
 
 
 
-const getAllTransaction = asyncHandler(async(req,res)=>{
+const getAvailableProductTotal = asyncHandler(async(req,res)=>{
    
     try{
 
-        const transactions = await getAllTransactions(req.user.id);
-        if(!transactions || transactions.length ==0){
+        const transactions = await getAllAvailabeProductTotal(req.user.id);
+        if(!transactions){
             return res.status(404).json({
                 status:false,
-                message:"No transactions found"
+                message:"No product total  found"
             })
         }
         return res.status(200).json(
@@ -55,67 +55,22 @@ const getAllTransaction = asyncHandler(async(req,res)=>{
     
 })
 
-//get all friends transactions
-const getFriendsTransaction = asyncHandler(async(req,res)=>{
-    
-    try{
+//confirm receive product
 
-        const transactions = await getAllFriendsTransaction(req.user.id);
-        if(!transactions || transactions.length ==0){
-            return res.status(404).json({
-                status:false,
-                message:"No transactions found"
-            })
-        }
-        return res.status(200).json(
-            transactions
-        );
-    }catch(error){
-        return res.status(500).json({message:"please try another time"})
-
-    }
-
-    
-})
-
-//get all friends transactions
-const getUtilityTransaction = asyncHandler(async(req,res)=>{
-    
-    try{
-
-        const transactions = await getAllUtilityTransaction(req.user.id);
-        if(!transactions || transactions.length ==0){
-            return res.status(404).json({
-                status:false,
-                message:"No transactions found"
-            })
-        }
-        return res.status(200).json(
-            transactions
-        );
-    }catch(error){
-        return res.status(500).json({message:"please try another time"})
-
-    }
-
-    
-})
-
-
-//get all friends transactions
-const getTransfersTransaction = asyncHandler(async(req,res)=>{
+const confirmReceivedProduct = asyncHandler(async(req,res)=>{
+   
    
     try{
 
-        const transactions = await getAllTransfersTransaction(req.user.id);
-        if(!transactions || transactions.length ==0){
+        const transactions = await confirmSoldProduct(req.user.id);
+        if(!transactions){
             return res.status(404).json({
                 status:false,
-                message:"No transactions found"
+                message:"No product total  found"
             })
         }
         return res.status(200).json(
-            transactions
+            {message:"success"}
         );
     }catch(error){
         return res.status(500).json({message:"please try another time"})
@@ -125,19 +80,87 @@ const getTransfersTransaction = asyncHandler(async(req,res)=>{
     
 })
 
+//user buy Product
 
-
-//total
-
-const getTotalAmount = asyncHandler(async(req,res)=>{
+const buyProductByUser = asyncHandler(async(req,res)=>{
+    const {product_id} = req.body;
    
     try{
 
-        const transactions = await getAllTotal(req.user.id);
+        const transactions = await buyProduct(req.user.id,product_id);
+        if(!transactions){
+            return res.status(404).json({
+                status:false,
+                message:"No product total  found"
+            })
+        }
+        return res.status(200).json(
+            {message:"success"}
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
+//get all available transactions
+const getAvailableProducts = asyncHandler(async(req,res)=>{
+    
+    try{
+
+        const transactions = await getAllAvailableProducts(req.user.id);
         if(!transactions || transactions.length ==0){
             return res.status(404).json({
                 status:false,
-                message:"No transactions found"
+                message:"No Product found"
+            })
+        }
+        return res.status(200).json(
+            transactions
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
+//get all sold products by seller
+const getsoldProductsAndPaymentReceived = asyncHandler(async(req,res)=>{
+    
+    try{
+
+        const transactions = await getAllSoldProducts (req.user.id);
+        if(!transactions || transactions.length ==0){
+            return res.status(404).json({
+                status:false,
+                message:"No Product found"
+            })
+        }
+        return res.status(200).json(
+            transactions
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
+//get all ondelivery transactions
+const getdeliveryProducts = asyncHandler(async(req,res)=>{
+    
+    try{
+
+        const transactions = await getAllUserDeliveryProducts(req.user.id);
+        if(!transactions || transactions.length ==0){
+            return res.status(404).json({
+                status:false,
+                message:"No product found"
             })
         }
         return res.status(200).json(
@@ -152,18 +175,68 @@ const getTotalAmount = asyncHandler(async(req,res)=>{
 })
 
 
-//get all mont total
+//get all User Products
+const getProducts = asyncHandler(async(req,res)=>{
+   
+    try{
 
-const getTotalMonthAmount = asyncHandler(async(req,res)=>{
+        const transactions = await getAllUserProducts(req.user.id);
+        if(!transactions || transactions.length ==0){
+            return res.status(404).json({
+                status:false,
+                message:"No Product Found "
+            })
+        }
+        return res.status(200).json(
+            transactions
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
+
+
+//total for all deliveries
+
+const getTotalDelivery = asyncHandler(async(req,res)=>{
+   
+    try{
+
+        const transactions = await getAllDeliveryProductTotal(req.user.id);
+        if(!transactions || transactions.length ==0){
+            return res.status(404).json({
+                status:false,
+                message:"No Product found"
+            })
+        }
+        return res.status(200).json(
+            transactions
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
+
+//get all Totals 'status" product track"
+
+const getTotalForProductTrack = asyncHandler(async(req,res)=>{
    
     const {month} = req.body
     try{
 
-        const transactions = await getAllMonthTotal(req.user.id,month);
+        const transactions = await getAllTotal(req.user.id,month);
         if(!transactions || transactions.length ==0){
             return res.status(404).json({
                 status:false,
-                message:"No transactions found"
+                message:"No Product found"
             })
         }
         return res.status(200).json(
@@ -178,10 +251,95 @@ const getTotalMonthAmount = asyncHandler(async(req,res)=>{
 })
 
 
-module.exports ={createATransaction,
-getTotalAmount,
-getAllTransaction,
-getTotalMonthAmount,
-getFriendsTransaction,
-getUtilityTransaction,
-getTransfersTransaction}
+const getAllProductsForBuyer = asyncHandler(async(req,res)=>{
+   
+    try{
+
+        const transactions = await getAllBuyersProducts(req.user.id);
+        if(!transactions || transactions.length ==0){
+            return res.status(404).json({
+                status:false,
+                message:"No Product found"
+            })
+        }
+        return res.status(200).json(
+            transactions
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
+
+const getAllProductsBoughtByBuyer = asyncHandler(async(req,res)=>{
+   
+    try{
+
+        const transactions = await getAllBuyersBoughtProducts(req.user.id);
+        if(!transactions || transactions.length ==0){
+            return res.status(404).json({
+                status:false,
+                message:"No Product found"
+            })
+        }
+        return res.status(200).json(
+            transactions
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
+
+const getAllProductsConfirmedByBuyer = asyncHandler(async(req,res)=>{
+   
+    try{
+
+        const transactions = await getAllBuyersSoldProducts(req.user.id);
+        if(!transactions || transactions.length ==0){
+            return res.status(404).json({
+                status:false,
+                message:"No Product found"
+            })
+        }
+        return res.status(200).json(
+            transactions
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
+
+module.exports ={createAProduct,
+    buyProductByUser,
+    getAllProductsConfirmedByBuyer,
+    getAllProductsForBuyer,
+    getAllProductsBoughtByBuyer,
+    getTotalForProductTrack,
+    getTotalDelivery,
+    getProducts,
+    getdeliveryProducts,
+    getsoldProductsAndPaymentReceived,
+    getAvailableProducts,
+    confirmReceivedProduct,
+    getAvailableProductTotal
+
+
+
+
+
+
+
+
+
+}
