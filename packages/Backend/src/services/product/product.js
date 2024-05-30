@@ -1,45 +1,7 @@
 const Product = require('../../models/Product')
 
 
-//add transaction
-// const { Timestamp } = require("mongodb");
-// const mongoose = require("mongoose");
-// const { type } = require("os");
 
-// const {Schema} = mongoose;
-
-// const  ProductSchema = new Schema({
-//     user: {
-//         type: Schema.Types.ObjectId,
-//         ref: "User",
-//         required: true,
-       
-//       },
-//       amount:{
-//         type:String,
-//         required:true
-
-//       },
-    
-//     product_No:{
-//         type:Schema.Types.String,
-//         required:true,
-//     },
-//     Product_Image:{
-//         type:String,
-//         required:false,
-//     },
-
-//     product_track:{
-//         type:String,
-//         required:true,
-//         enum:['available','ondelivery','sold'],
-//         default:'available'
-//     }
-    
-
-// },
-// {timestamps:true})
 
 
 module.exports = mongoose.models.Product || mongoose.model("Product", ProductSchema);
@@ -54,7 +16,7 @@ const createProduct = async(user_id,product_track,amount,product_image,product_n
         product_image: product_image,
         product_no:product_no,
     })
-    return product;
+    return transaction;
 
 }
 
@@ -169,14 +131,20 @@ const confirmSoldProduct = async(user_id)=>{
 
 
 module.exports = {
-    createTransaction,
-    getAllTransactions,
-    getAllFriendsTransaction,
-    getAllUtilityTransaction,
-    getAllTransfersTransaction,
-    getAllTotal,
-    getAllFriendsTotalTransaction,
-    getAllTransfersTotalTransaction,
-    getAllUtilityTotalTransaction,
-    getAllMonthTotal
+    getAllAvailabeProductTotal,
+    getAllBuyersProducts,
+    getAllBuyersSoldProducts,
+    confirmSoldProduct,
+    getAllBuyersBoughtProducts,
+    getAllDeliveryProductTotal,
+   createProduct,
+   buyProduct,
+   getAllTotal,
+   getAllUserProducts,
+   getAllSoldProducts,
+   getAllAvailableProducts,
+   getAllUserDeliveryTransaction,
+   getAllSoldProduct 
+
+
 }
