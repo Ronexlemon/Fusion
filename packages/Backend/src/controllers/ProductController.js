@@ -1,21 +1,22 @@
 const asyncHandler = require("express-async-handler")
 
-const {getAllTotal,getAllFriendsTransaction,getAllUtilityTransaction,getAllTransactions,getAllTransfersTransaction,getAllFriendsTotalTransaction,getAllUtilityTotalTransaction,createTransaction,getAllMonthTotal} = require("../../services/transaction/transaction")
+const {createProduct,getAllAvailabeProductTotal,getAllAvailableProducts,getAllBuyersProducts,getAllBuyersBoughtProducts,getAllBuyersSoldProducts,getAllDeliveryProductTotal,getAllSoldProduct,getAllSoldProducts,getAllTotal,getAllUserDeliveryTransaction,getAllUserProducts} = require("../services/product/product")
 
 
 
 
-const createATransaction = asyncHandler(async(req,res)=>{
+const createAProduct = asyncHandler(async(req,res)=>{
+   // user_id,product_track,amount,product_image,
    
     
-    const {transanctiontype,amount,month} = req.body;
+    const {product_track,amount,product_image} = req.body;
     try{
 
-        const transaction = await createTransaction(req.user.id,transanctiontype,amount,month);
+        const transaction = await createProduct(req.user.id,product_track,amount,product_image);
         if(!transaction || transaction.length ==0){
             return res.status(404).json({
                 status:false,
-                message:"No transactions Created"
+                message:"No product Created"
             })
         }
         await transaction.save();

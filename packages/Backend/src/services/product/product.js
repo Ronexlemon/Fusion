@@ -1,20 +1,14 @@
 const Product = require('../../models/Product')
 
 
-
-
-
-module.exports = mongoose.models.Product || mongoose.model("Product", ProductSchema);
-
-
-const createProduct = async(user_id,product_track,amount,product_image,product_no)=>{
+const createProduct = async(user_id,product_track,amount,product_image)=>{
 
     const transaction = new Product({
         user: user_id,
         amount:amount,
         product_track:product_track,
         product_image: product_image,
-        product_no:product_no,
+        // product_no:product_no,
     })
     return transaction;
 
