@@ -40,8 +40,8 @@ const PORT = process.env.PORT || 3000;
 })()
 
 App.use("/api/auth",authroute);
-App.use("/api/transaction",transaction);
+//App.use("/api/transaction",transaction);
 
-app.listen(PORT, () => {
+App.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

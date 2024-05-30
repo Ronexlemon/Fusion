@@ -2,8 +2,8 @@ const express = require("express")
 
 const router = express.Router();
 
-const {login,register} = require("../controllers/authentication/authcontroller")
-const {validateToken} = require("../middleWare/handleJwtToken")
+const {login,register} = require("../controllers/UserController")
+const {validateToken} = require("../middleware/handleJwtTokens")
 
 router.post("/register",register)
 
