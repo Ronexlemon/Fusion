@@ -27,6 +27,12 @@ const getAllAvailableProducts = async(user_id)=>{
     const transactions = await Product.find({user:user_id, product_track:"available"})
     return transactions}
 
+const getAllUnlistedProducts = async(user_id)=>{
+    const transactions = await Product.find({user:user_id, product_track:"unlisted"})
+    return transactions}
+
+    
+
 
  const getAllUserDeliveryProducts = async(user_id)=>{
         const transactions = await Product.find({user:user_id,product_track:"ondelivery"})
@@ -91,6 +97,17 @@ const buyProduct = async(user_id,product_id)=>{
    
 }
 
+const listProduct = async(user_id,product_id)=>{
+    const product = await Product.findOneAndUpdate({ _id: product_id,user:user_id },{$set: {product_track: 'available' // or another status based on your logic
+            }
+        },
+        { new: true } // Return the updated document
+    );
+    return !!product;
+
+   
+}
+
 const getAllBuyersProducts =async(user_id)=>{
     const products = await Product.find({buyer:user_id});
 
@@ -112,7 +129,7 @@ const getAllBuyersSoldProducts =async(user_id)=>{
 
 
 const confirmSoldProduct = async(user_id)=>{
-    const product = await Product.findOneAndUpdate({ buyer: user_id },{$set: {product_track: 'sold' // or another status based on your logic
+    const product = await Product.findOneAndUpdate({ buyer: user_id,_id:pro },{$set: {product_track: 'sold' // or another status based on your logic
             }
         },
         { new: true } // Return the updated document
@@ -139,7 +156,10 @@ module.exports = {
    getAllSoldProducts,
    getAllAvailableProducts,
    getAllUserDeliveryProducts,
-   getAllSoldProduct 
+   getAllSoldProduct,
+   listProduct,
+   getAllUnlistedProducts,
+   
 
 
 }

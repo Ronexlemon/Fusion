@@ -25,8 +25,8 @@ const  ProductSchema = new Schema({
     product_track:{
         type:String,
         required:true,
-        enum:['available','ondelivery','sold'],
-        default:'available'
+        enum:['unlisted','available','ondelivery','sold'],
+        default:'unlisted'
     },
     Product_name:{
         type:String,

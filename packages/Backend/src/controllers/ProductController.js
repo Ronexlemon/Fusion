@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler")
 
-const {createProduct,getAllAvailabeProductTotal,getAllAvailableProducts,getAllBuyersProducts,getAllBuyersBoughtProducts,getAllBuyersSoldProducts,getAllDeliveryProductTotal,getAllSoldProduct,buyProduct,getAllSoldProducts,getAllTotal,getAllUserDeliveryProducts,getAllUserProducts,confirmSoldProduct} = require("../services/product/product")
+const {createProduct,getAllUnlistedProducts,listProduct,getAllAvailabeProductTotal,getAllAvailableProducts,getAllBuyersProducts,getAllBuyersBoughtProducts,getAllBuyersSoldProducts,getAllDeliveryProductTotal,getAllSoldProduct,buyProduct,getAllSoldProducts,getAllTotal,getAllUserDeliveryProducts,getAllUserProducts,confirmSoldProduct} = require("../services/product/product")
 
 
 
@@ -105,12 +105,63 @@ const buyProductByUser = asyncHandler(async(req,res)=>{
     
 })
 
+//list a product
+
+
+
+const listAproduct = asyncHandler(async(req,res)=>{
+    const {product_id} = req.body;
+   
+    try{
+
+        const transactions = await listProduct(req.user.id,product_id);
+        if(!transactions){
+            return res.status(404).json({
+                status:false,
+                message:"No product total  found"
+            })
+        }
+        return res.status(200).json(
+            {message:"success"}
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
 //get all available transactions
 const getAvailableProducts = asyncHandler(async(req,res)=>{
     
     try{
 
         const transactions = await getAllAvailableProducts(req.user.id);
+        if(!transactions || transactions.length ==0){
+            return res.status(404).json({
+                status:false,
+                message:"No Product found"
+            })
+        }
+        return res.status(200).json(
+            transactions
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
+//get all unlisted products by user
+
+const getUnlistedProducts = asyncHandler(async(req,res)=>{
+    
+    try{
+
+        const transactions = await getAllUnlistedProducts(req.user.id);
         if(!transactions || transactions.length ==0){
             return res.status(404).json({
                 status:false,
@@ -332,7 +383,9 @@ module.exports ={createAProduct,
     getsoldProductsAndPaymentReceived,
     getAvailableProducts,
     confirmReceivedProduct,
-    getAvailableProductTotal
+    getAvailableProductTotal,
+    listAproduct,
+    getUnlistedProducts
 
 
 
