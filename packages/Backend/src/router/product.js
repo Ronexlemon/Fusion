@@ -8,6 +8,7 @@ const {validateToken} = require("../middleware/handleJwtTokens")
 router.post("/create",validateToken,createAProduct)
 router.get("/userProduts",validateToken,getProducts)
 router.post("/buyProduct",validateToken,buyProductByUser)
+router.get("/userAvailableProducts",validateToken,getAvailableProducts)
 
 
 
