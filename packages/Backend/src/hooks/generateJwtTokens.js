@@ -1,5 +1,6 @@
 
 const jwt = require("jsonwebtoken")
+require('dotenv').config();
 
 const generateAccessToken =async(userPhoneNumber,userId)=>{
 

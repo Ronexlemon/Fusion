@@ -1,88 +1,89 @@
-const asyncHandler = require("express-async-handler")
+const asyncHandler = require("express-async-handler");
 
-const {createUser,authenticate} = require("../services/auth/user");
+const { createUser, authenticate } = require("../services/auth/user");
+const { hashPassword, compareHashPassword } = require("../hooks/hashComparePassword");
 
-const {hashPassword,compareHashPassword} = require("../hooks/hashComparePassword");
+const { useSocialConnect } = require("../hooks/maphonenumberToAddress");
+const { getTheCurrentTime } = require("../hooks/getnowTime");
+const {generateAccessToken,generateRefreshToken}=require("../hooks/generateJwtTokens")
 
-const {generateAccessToken,generateRefreshToken} = require("../middleware/handleJwtTokens")
+// Register User
+const register = asyncHandler(async (req, res) => {
+    const { mapPhoneNumber } = await useSocialConnect();
+    const { phoneNumber, password, userAddress } = req.body;
 
-const {useSocialconnect} = require("../hooks/maphonenumberToAddress")
-
-
-const register = asyncHandler(async(req,res)=>{
-    const {phoneNumber,password} = req.body;
-    try{
+    try {
+        const time = getTheCurrentTime();
         const hashPass = await hashPassword(password);
-        const user = await createUser(phoneNumber,hashPass);
-        if(!user || user.length ==0){
-         return   res.status(400).json({
-                message:"User not created"
-            })
-        }   
+        const user = await createUser(phoneNumber, hashPass);
 
-        await user.save();
-
-       return res.status(200).json({
-            message:"User created successfully",
-            user
-        })
-
-
-    }catch(error){
-        console.log(error)
-
-return res.status(500).json({
-    message:"Internal server error",
-    error
-})
-    }
-
-})
-
-
-//loging
-
-const login = asyncHandler(async(req,res)=>{
-    const {phoneNumber,password} = req.body;
-
-    try{
-        const user = await authenticate(phoneNumber);
-
-        if(!user || user.length ==0){
-            return   res.status(400).json({
-                message:"confirm your credentials"
-            })
-
+        if (!user) {
+            return res.status(400).json({ message: "User not created" });
         }
-        const passMatch = await compareHashPassword(password,user.password);
-        console.log("user id",user._id)
-       
-        if(passMatch){
-            const accestoken = await generateAccessToken(user.phoneNumber,user._id)
 
-            const refreshToken = await generateRefreshToken(user.phoneNumber,user._id)
-          
-          res.cookie("refreshToken",refreshToken,
-          {maxAge:24*60*60*1000,
-            httpOnly:true,
-            secure:false, // o be changed on production to true
-            sameSite:"None"});
-            res.status(200).json({userdata:user,accesstokens:accestoken});
-        }else{
-            res.status(400).json("Confirm your credentials");
-        };
+        // Register phone number
+        const result = await mapPhoneNumber(phoneNumber, userAddress, time);
+        console.log(result)
+        
+            await user.save();
+            return res.status(200).json({
+                message: "User created successfully",
+                user
+           
 
-
-    }catch(error){
-        return res.status(500).json({
-            message:"Internal server error",
-            error
         })
         
+
+        
+
+        
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            error
+        });
     }
-})
+});
 
+// Login User
+const login = asyncHandler(async (req, res) => {
+    const { mapPhoneNumber,lookupForAddresses } = await useSocialConnect();
+    const { phoneNumber, password } = req.body;
 
-module.exports = {register,
-    login
-}
+    try {
+        const user = await authenticate(phoneNumber);
+
+        if (!user) {
+            return res.status(400).json({ message: "Confirm your credentials" });
+        }
+
+        const passMatch = await compareHashPassword(password, user.password);
+        console.log("User ID:", user._id);
+
+        if (passMatch) {
+            const accessToken = await generateAccessToken(user.phoneNumber, user._id);
+            const refreshToken = await generateRefreshToken(user.phoneNumber, user._id);
+
+            res.cookie("refreshToken", refreshToken, {
+                maxAge: 24 * 60 * 60 * 1000,
+                httpOnly: true,
+                secure: false, // Change to true in production
+                sameSite: "None"
+            });
+            const userAdd = await lookupForAddresses(phoneNumber);
+
+            return res.status(200).json({ userData: user, accessToken,address:userAdd});
+        } else {
+            return res.status(400).json({ message: "Confirm your credentials" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            error
+        });
+    }
+});
+
+module.exports = { register, login };

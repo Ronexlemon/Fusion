@@ -131,14 +131,15 @@ module.exports = {ASv2,ALFAJORES_RPC};
 //   const asv2 = new ASv2(kit)
 //   const userAccount = '0xEDE548D2fcEB23D27BfCa246995522D6e13Cbbc6'
 //   const userPhoneNumber = '+18009099985'
+//   const p2e = "+2547017073761"
 //   const timeAttestationWasVerified = Math.floor(new Date().getTime() / 1000)
 //   // try {
-//   //   await asv2.registerAttestation(userPhoneNumber, userAccount, timeAttestationWasVerified)
+//   //   await asv2.registerAttestation(p2e, userAccount, timeAttestationWasVerified)
 //   //   console.log('attestation registered')
 //   // } catch (err) {
 //   //   // mostly likely reason registering would fail is if this issuer has already
 //   //   // registered a mapping between this number and account
 //   //   console.log("error",err)
 //   // }
-//   console.log("address user",await asv2.lookupAddresses(userPhoneNumber))
+//   console.log("address user",await asv2.lookupAddresses(p2e))
 // })()
