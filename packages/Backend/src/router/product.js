@@ -9,6 +9,8 @@ router.post("/create",validateToken,createAProduct)
 router.get("/userProduts",validateToken,getProducts)
 router.post("/buyProduct",validateToken,buyProductByUser)
 router.get("/userAvailableProducts",validateToken,getAvailableProducts)
+router.get("/buyerBoughtproducts",validateToken,getAllProductsForBuyer)
+
 
 
 
