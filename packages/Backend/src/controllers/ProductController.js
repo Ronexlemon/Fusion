@@ -280,10 +280,10 @@ const getTotalDelivery = asyncHandler(async(req,res)=>{
 
 const getTotalForProductTrack = asyncHandler(async(req,res)=>{
    
-    const {month} = req.body
+    
     try{
 
-        const transactions = await getAllTotal(req.user.id,month);
+        const transactions = await getAllTotal(req.user.id);
         if(!transactions || transactions.length ==0){
             return res.status(404).json({
                 status:false,

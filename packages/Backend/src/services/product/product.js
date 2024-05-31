@@ -73,6 +73,7 @@ const getAllTotal = async (user_id) => {
     
     // Object to store total amounts for each enum value
     const totalAmounts = {
+        unlisted:0,
         available: 0,
         ondelivery: 0,
         sold: 0
