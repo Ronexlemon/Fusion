@@ -5,6 +5,7 @@ require('dotenv').config();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const authroute = require("./src/router/user")
+const products = require("./src/router/product");
 
 const connectToDb = require("./src/lib/config/db")
 
@@ -40,7 +41,7 @@ const PORT = process.env.PORT || 3000;
 })()
 
 App.use("/api/auth",authroute);
-//App.use("/api/transaction",transaction);
+App.use("/api/products",products);
 
 App.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

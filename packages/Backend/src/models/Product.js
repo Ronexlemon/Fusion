@@ -16,11 +16,7 @@ const  ProductSchema = new Schema({
         required:true
 
       },
-    
-    product_No:{
-        type:Schema.Types.String,
-        required:true,
-    },
+        
     Product_Image:{
         type:String,
         required:false,
@@ -32,6 +28,15 @@ const  ProductSchema = new Schema({
         enum:['available','ondelivery','sold'],
         default:'available'
     },
+    Product_name:{
+        type:String,
+        required:true,
+    },
+    Product_description:{
+        type:String,
+        required:true,
+    },
+
     buyer: {
         type: Schema.Types.ObjectId,
         ref: "User",
