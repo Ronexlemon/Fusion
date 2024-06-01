@@ -2,7 +2,7 @@ const express = require("express")
 
 const router = express.Router();
 
-const {login,register} = require("../controllers/UserController")
+const {login,register,lookup} = require("../controllers/UserController")
 const {validateToken} = require("../middleware/handleJwtTokens")
 
 router.post("/register",register)
@@ -10,7 +10,7 @@ router.post("/register",register)
 
 router.post("/login",login);
 
-router.get("/logout",)
+router.get("/lookup",lookup)
 
 
 
