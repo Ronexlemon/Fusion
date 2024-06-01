@@ -16,6 +16,9 @@ router.get("/allConfirmedProducts",validateToken,getAllProductsConfirmedByBuyer)
 router.get("/alldeliverTotalProducts",validateToken,getTotalDelivery)
 router.get("/userUnlistedProducts",validateToken,getUnlistedProducts)
 router.get("/buyerproducts",validateToken,getAllProductsForBuyer)
+router.post("/confirmReceivedProducts",validateToken,confirmReceivedProduct)
+router.get("/deliveryProducts",validateToken,getdeliveryProducts)
+router.get("/paidProducts",validateToken,getsoldProductsAndPaymentReceived)
 router.get("/buyerboughtproducts",validateToken,getAllProductsBoughtByBuyer)
 
 
