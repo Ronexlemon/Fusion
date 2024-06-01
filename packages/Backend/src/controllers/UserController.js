@@ -48,7 +48,7 @@ const register = asyncHandler(async (req, res) => {
 
 // Login User
 const login = asyncHandler(async (req, res) => {
-    const { mapPhoneNumber,lookupForAddresses } = await useSocialConnect();
+    // const { mapPhoneNumber,lookupForAddresses } = await useSocialConnect();
     const { phoneNumber, password } = req.body;
 
     try {
@@ -71,9 +71,9 @@ const login = asyncHandler(async (req, res) => {
                 secure: false, // Change to true in production
                 sameSite: "None"
             });
-            const userAdd = await lookupForAddresses(phoneNumber);
+            // const userAdd = await lookupForAddresses(phoneNumber);
 
-            return res.status(200).json({ userData: user, accessToken,address:userAdd});
+            return res.status(200).json({ userData: user, accessToken});
         } else {
             return res.status(400).json({ message: "Confirm your credentials" });
         }
