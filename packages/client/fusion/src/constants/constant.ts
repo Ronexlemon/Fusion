@@ -1,0 +1,1 @@
+export const FUSIONBACKEND = "https://fusion-fagp.onrender.com/api"
