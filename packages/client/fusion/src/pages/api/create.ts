@@ -1,12 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { FUSIONBACKEND } from "@/constants/constant";
-
-type TransactionData = {
-  transactionType: string;
-  amount: number;
-  month: number;
-  token:any
+// {product_name,product_description,amount,product_image}
+export type ProductData = {
+  product_name: string;
+  product_description:string;
+  amount:string;
+  product_image:string;
+  token:string
 };
 
 type ApiResponse = {
@@ -24,7 +25,7 @@ export default async function handler(
       return res.status(405).json({ success: false, message: "Method Not Allowed" });
     }
 
-    const { transactionType, amount, month,token }: TransactionData = req.body;
+    const {product_name,product_description,amount,product_image,token}: ProductData = req.body;
 
     // Perform any necessary validation of transaction data here
 
@@ -37,9 +38,10 @@ export default async function handler(
         
       },
       body: JSON.stringify({
-        transanctiontype: transactionType,
+        product_name: product_name,
         amount: amount,
-        month: month,
+        product_description: product_description,
+        product_image:product_image
       }),
     });
 

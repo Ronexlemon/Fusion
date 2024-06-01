@@ -37,9 +37,9 @@ export const SignInUserr = async (userDetails: dataSignInUser) => {
   };
 
 
-  export const CreateTransaction = async (transactionDetails: Transaction) => {
+  export const CreateProduct = async (transactionDetails: Transaction) => {
     try {
-      const res = await fetch("api/cashout", {
+      const res = await fetch("api/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
