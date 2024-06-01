@@ -3,7 +3,7 @@ import { JwtPayload } from "next-auth/jwt";
 declare module "next-auth"{
     interface Session{
         user: {
-          userdata:{
+          userData:{
             _id: string;
             password: string;
             phoneNumber: string;
@@ -11,10 +11,7 @@ declare module "next-auth"{
             updatedAt: string;
             __v: number;
           }      
-          accesstokens:{
-            accestoken: string;
-
-          },
+          accessToken: string;
           iat: number;
           exp: number;
           jti: string;
@@ -30,7 +27,7 @@ declare module "next-auth"{
     // Define the interface for the token obtained from getToken
 export interface TokenPayload extends JwtPayload {
   
-    userdata:{
+    userData:{
       _id: string;
       password: string;
       phoneNumber: string;
@@ -39,7 +36,7 @@ export interface TokenPayload extends JwtPayload {
       __v: number;
     }      
     
-      accesstokens: string;
+      accessToken: string;
 
     
     iat: number;
