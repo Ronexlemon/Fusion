@@ -1,6 +1,8 @@
 import * as React from "react"
-
+import Image from "next/image"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Badge } from "@/components/ui/badge"
+
 import { Separator } from "@/components/ui/separator"
 import {
     Card,
@@ -13,6 +15,8 @@ import {
   import { Label } from "../ui/label"
   import { Input } from "../ui/input"
   import { Button } from "../ui/button"
+  import { Products } from "@/helpers/data"
+  import { ProductInterface } from "@/helpers/data"
   
 
 const tags = Array.from({ length: 50 }).map(
@@ -24,29 +28,34 @@ export default function MarketPlace() {
     <main className="w-screen h-screen">
         <div className="h-full w-full"> 
         <ScrollArea className="h-full w-full ">
-      <div className="w-full p-4">
+      <div className="w-full p-4 mt-16">
         
-        {tags.map((tag) => (
+        {Products.map((item:ProductInterface,index:number) => (
           <>
             <Card className="gap-2 mb-4">
           <CardHeader>
-            <CardTitle>Login</CardTitle>
+            <CardTitle>{item.Product_name}</CardTitle>
             <CardDescription>
-              Have an account give it a shot
+             {item.product_description}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="space-y-1">
-              <Label htmlFor="name">Phone Number</Label>
-              <Input id="name" type="number" placeholder="0701707772" />
+            <div className="space-y-1 ">
+            <Image
+                                        className="block h-1/2 w-auto sm:block lg:block"
+                                        src="/logo.svg"
+                                        width="24"
+                                        height="24"
+                                        alt="Celo Logo"
+                                    />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="username">Password</Label>
-              <Input id="username" type="text"  placeholder="JohnDoe@#" />
-            </div>
+           
           </CardContent>
-          <CardFooter>
-            <Button>Login</Button>
+          <CardFooter className="flex justify-between items-center">
+            
+            <Button>Buy</Button>
+            <Badge variant="outline">{item.status}</Badge>
+
           </CardFooter>
         </Card>
           </>
