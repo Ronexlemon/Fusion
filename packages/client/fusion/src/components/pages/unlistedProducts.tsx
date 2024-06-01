@@ -33,7 +33,8 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-  
+  import { useSession } from "next-auth/react";
+  import { useAccount } from "wagmi";
   
   
 
@@ -42,11 +43,17 @@ const tags = Array.from({ length: 50 }).map(
 )
 
 export default function UnlistedProducts() {
+    const {data:session} = useSession();
     const [open,setOpen] = React.useState<boolean>(false)
     const [productName,setProductName]=React.useState<string>("");
     const [productDescription,setProductDescription]=React.useState<string>("");
     const [productAmount,setProductAmount]=React.useState<string>("");
     const [productImage,setProductImage]=React.useState<string>("");
+    const { address, isConnected } = useAccount();
+    const token = session?.user.accesstokens as unknown as string;
+    console.log("tokn ssss",token)
+    console.log("data",session?.user)
+
   return (
     <main className="w-screen h-screen">
         <div className="h-full w-full "> 

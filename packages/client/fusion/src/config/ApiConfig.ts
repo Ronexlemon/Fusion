@@ -22,6 +22,7 @@ export type Transaction ={
   token:any
 }
 
+import { ProductData } from "@/pages/api/create";
 
 export const SignInUserr = async (userDetails: dataSignInUser) => {
     try {
@@ -35,9 +36,9 @@ export const SignInUserr = async (userDetails: dataSignInUser) => {
       console.log("failed to signinUser", error);
     }
   };
+  // {product_name,product_description,amount,product_image}
 
-
-  export const CreateProduct = async (transactionDetails: Transaction) => {
+  export const CreateProduct = async (transactionDetails: ProductData) => {
     try {
       const res = await fetch("api/create", {
         method: "POST",
@@ -45,9 +46,10 @@ export const SignInUserr = async (userDetails: dataSignInUser) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-           transactionType:transactionDetails.transanctiontype,
+           product_name:transactionDetails.product_name,
            amount: transactionDetails.amount,
-           month:transactionDetails.month,
+           product_description:transactionDetails.product_description,
+           product_image:transactionDetails.product_image,
            token:transactionDetails.token
         }),
       });
