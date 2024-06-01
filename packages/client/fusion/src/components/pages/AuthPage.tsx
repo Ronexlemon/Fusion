@@ -1,3 +1,5 @@
+"use client"
+import React,{useState} from "react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -15,9 +17,43 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { UserSignUp } from "@/config/ApiConfig"
+import { useRouter } from "next/router";
+import {useAccount} from "wagmi"
 
 
 export function AuthPage() {
+  const account = useAccount();
+  
+  const router = useRouter();
+  const [phoneNumber, setPhoneNumber] = useState<string>("")
+  const [confirmPassword, setConfirmPassword] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+
+  const handleRegister = async() => {
+    // Do something with the form data
+    console.log("Phone Number:", phoneNumber);
+    console.log("Password:", password);
+    console.log("Confirm Password:", confirmPassword);
+    try{
+      const res = await UserSignUp({phoneNumber:phoneNumber,password:password});
+      if (res?.status === 200) {
+        // Navigate to homepage
+        router.push("/");
+      }
+
+
+    }catch(error){
+      console.log("resgister error",error)
+
+    }
+
+    // Reset the form fields
+    setPhoneNumber("");
+    setPassword("");
+    setConfirmPassword("");
+  };
+
   return (
     <main className="bg-black  w-full h-screen flex justify-center items-center">
         <Tabs defaultValue="login" className="w-[400px]">
@@ -36,11 +72,13 @@ export function AuthPage() {
           <CardContent className="space-y-2">
             <div className="space-y-1">
               <Label htmlFor="name">Phone Number</Label>
-              <Input id="name" type="number" placeholder="0701707772" />
+              <Input id="name" type="number" placeholder="0701707772" value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)} />
             </div>
             <div className="space-y-1">
               <Label htmlFor="username">Password</Label>
-              <Input id="username" type="text"  placeholder="JohnDoe@#" />
+              <Input id="username" type="text"  placeholder="JohnDoe@#"  value={password}
+            onChange={(e) => setPassword(e.target.value)} />
             </div>
           </CardContent>
           <CardFooter>
@@ -59,11 +97,13 @@ export function AuthPage() {
           <CardContent className="space-y-2">
           <div className="space-y-1">
               <Label htmlFor="name">Phone Number</Label>
-              <Input id="name" type="number" placeholder="0701707772" />
+              <Input id="name" type="number" placeholder="0701707772"  value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}/>
             </div>
             <div className="space-y-1">
               <Label htmlFor="username">Password</Label>
-              <Input id="username" type="text"  placeholder="JohnDoe@#" />
+              <Input id="username" type="text"  placeholder="JohnDoe@#"  value={password}
+            onChange={(e) => setPassword(e.target.value)} />
             </div>
             <div className="space-y-1">
               <Label htmlFor="username">Confirm</Label>
@@ -71,7 +111,7 @@ export function AuthPage() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Register</Button>
+            <Button onClick={handleRegister}>Register</Button>
           </CardFooter>
         </Card>
       </TabsContent>

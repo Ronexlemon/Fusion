@@ -5,6 +5,7 @@ import { FUSIONBACKEND } from "@/constants/constant";
 type TransactionData = {
   phoneNumber: string;
   password: string;
+  address:string;
  
 };
 
@@ -18,12 +19,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiResponse>
 ) {
+  const add = "0xE062211F3b2e224BBA476a176110660D33a7F3Cf"
   try {
     if (req.method !== "POST") {
       return res.status(405).json({ success: false, message: "Method Not Allowed" });
     }
 
-    const { phoneNumber,password }: TransactionData = req.body;
+    const { phoneNumber,password,address }: TransactionData = req.body;
 
     // Perform any necessary validation of transaction data here
 
@@ -36,8 +38,9 @@ export default async function handler(
         
       },
       body: JSON.stringify({
-        phoneNumber: phoneNumber,
+        phoneNumber: `+254${phoneNumber}`,
         password:password ,
+        userAddress:address
         
       }),
     });

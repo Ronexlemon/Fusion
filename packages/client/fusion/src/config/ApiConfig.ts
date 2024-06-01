@@ -7,6 +7,12 @@ export type dataSignInUser = {
   password: string;
 };
 
+export type RegisterUser = {
+  phoneNumber: string;
+  password: string;
+  address :string
+};
+
 export type Transaction ={
   transanctiontype:string,
   amount:string,
@@ -50,7 +56,7 @@ export const SignInUserr = async (userDetails: dataSignInUser) => {
   };
 
 
-  export const UserSignUp = async (userDetails: dataSignInUser) => {
+  export const UserSignUp = async (userDetails: RegisterUser) => {
     try {
       const res = await fetch("api/signup", {
         method: "POST",
@@ -60,6 +66,7 @@ export const SignInUserr = async (userDetails: dataSignInUser) => {
         body: JSON.stringify({
           phoneNumber: userDetails.phoneNumber,
           password: userDetails.password,
+          address: userDetails.address
       
         }),
       });

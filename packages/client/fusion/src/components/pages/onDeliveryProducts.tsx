@@ -23,7 +23,7 @@ const tags = Array.from({ length: 50 }).map(
   (_, i, a) => `v1.2.0-beta.${a.length - i}`
 )
 
-export default function MarketPlace() {
+export default function OndeliveryProducts() {
   return (
     <main className="w-screen h-screen">
         <div className="h-full w-full"> 
@@ -59,7 +59,7 @@ export default function MarketPlace() {
           </CardContent>
           <CardFooter className="flex justify-between items-center">
             
-            <Button>Buy</Button>
+            <Button variant="destructive">Confirm</Button>
             <Badge variant="outline">{item.status}</Badge>
 
           </CardFooter>

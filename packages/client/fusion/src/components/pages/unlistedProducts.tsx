@@ -23,7 +23,7 @@ const tags = Array.from({ length: 50 }).map(
   (_, i, a) => `v1.2.0-beta.${a.length - i}`
 )
 
-export default function MarketPlace() {
+export default function UnlistedProducts() {
   return (
     <main className="w-screen h-screen">
         <div className="h-full w-full"> 
@@ -32,7 +32,7 @@ export default function MarketPlace() {
         
         {Products.map((item:ProductInterface,index:number) => (
           <>
-            <Card className="gap-2 mb-4">
+            <Card key={index} className="gap-2 mb-4">
           <CardHeader>
             <CardTitle>{item.Product_name}</CardTitle>
             <CardDescription className="flex flex-col justify-between items-start">
@@ -59,7 +59,7 @@ export default function MarketPlace() {
           </CardContent>
           <CardFooter className="flex justify-between items-center">
             
-            <Button>Buy</Button>
+            <Button>List</Button>
             <Badge variant="outline">{item.status}</Badge>
 
           </CardFooter>
