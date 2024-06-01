@@ -8,6 +8,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import { http, WagmiProvider, createConfig } from "wagmi";
 import Layout from "../components/Layout";
+import { SessionProvider } from "next-auth/react";
 
 
 
@@ -44,9 +45,11 @@ function App({ Component, pageProps }: AppProps) {
       <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
               <RainbowKitProvider>
+              <SessionProvider session={pageProps.session}>
                   <Layout>
                       <Component {...pageProps} />
                   </Layout>
+                  </SessionProvider>
               </RainbowKitProvider>
           </QueryClientProvider>
       </WagmiProvider>

@@ -17,18 +17,40 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { UserSignUp } from "@/config/ApiConfig"
+import { SignInUserr, UserSignUp } from "@/config/ApiConfig"
 import { useRouter } from "next/router";
 import {useAccount} from "wagmi"
+import { useSession } from "next-auth/react";
 
 
 export function AuthPage() {
   const account = useAccount();
+  const {data:session} = useSession();
   
   const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const handlelogin = async() => {
+    // Handle form submission here, e.g., call an API to authenticate the user
+    console.log("Phone number:", phoneNumber);
+    console.log("Password:", password);
+    // Reset input fields after submission if needed
+    try{
+      const res = await SignInUserr({phoneNumber:`+${phoneNumber}`,password:password})
+      // Check if response status is 200
+      if (res?.url) {
+        // Navigate to homepage
+        router.push("/market");
+      }
+
+
+    }catch(error){
+      console.log("error",error)
+    }
+    setPhoneNumber("");
+    setPassword("");
+  };
 
   const handleRegister = async() => {
     // Do something with the form data
@@ -36,11 +58,16 @@ export function AuthPage() {
     console.log("Password:", password);
     console.log("Confirm Password:", confirmPassword);
     try{
-      const res = await UserSignUp({phoneNumber:phoneNumber,password:password});
-      if (res?.status === 200) {
-        // Navigate to homepage
-        router.push("/");
+      if(account.isConnected){
+        const res = await UserSignUp({phoneNumber:phoneNumber,password:password,address:account.address});
+        if (res?.status === 200) {
+          // Navigate to homepage
+          router.push("/");
+        }
+
       }
+      //notify to connect
+     
 
 
     }catch(error){
@@ -82,7 +109,7 @@ export function AuthPage() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Login</Button>
+            <Button onClick={handlelogin}>Login</Button>
           </CardFooter>
         </Card>
       </TabsContent>

@@ -2,6 +2,8 @@
 import { signIn } from "next-auth/react";
 import { transactionType } from "viem";
 
+
+
 export type dataSignInUser = {
   phoneNumber: string;
   password: string;
@@ -10,7 +12,7 @@ export type dataSignInUser = {
 export type RegisterUser = {
   phoneNumber: string;
   password: string;
-  address :string
+  address :`0x${string}` | undefined
 };
 
 export type Transaction ={
