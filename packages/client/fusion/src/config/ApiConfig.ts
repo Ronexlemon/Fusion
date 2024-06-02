@@ -1,6 +1,7 @@
 
 import { signIn } from "next-auth/react";
 import { transactionType } from "viem";
+import { ProductList } from "@/pages/api/list";
 
 
 
@@ -79,3 +80,28 @@ export const SignInUserr = async (userDetails: dataSignInUser) => {
       console.log("failed to register", error);
     }
   };
+
+
+
+  //
+
+  export const ListProduct = async (transactionDetails: ProductList) => {
+    try {
+      const res = await fetch("api/list", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          product_id:transactionDetails.product_id,
+           token:transactionDetails.token
+        }),
+      });
+      return res;
+    } catch (error) {
+      console.log("failed to register", error);
+    }
+  };
+
+
+  

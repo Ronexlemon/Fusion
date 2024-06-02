@@ -38,6 +38,7 @@ import { CreateProduct } from "@/config/ApiConfig";
 import { useQuery } from "@tanstack/react-query";
 import { FUSIONBACKEND } from "@/constants/constant";
 import { FusionProduct } from "@/types/product";
+import { ListProduct } from "@/config/ApiConfig";
 
 export default function UnlistedProducts() {
     const { data: session } = useSession();
@@ -69,6 +70,24 @@ export default function UnlistedProducts() {
             console.log("transaction error", error);
         }
     };
+
+    //handle list
+    const handleList = async (product_id:string) => {
+        try {
+            console.log("Listing ......");
+            const result = await ListProduct({
+                product_id: product_id,                
+                token: token
+            });
+            console.log("Transaction result status:", result?.status);
+            if (result?.status == 200) {
+                console.log(result);
+            }
+        } catch (error) {
+            console.log("transaction error", error);
+        }
+    };
+
 
     
 
@@ -192,7 +211,7 @@ export default function UnlistedProducts() {
                                     </div>
                                 </CardContent>
                                 <CardFooter className="flex justify-between items-center">
-                                <Button>LIST</Button>
+                                <Button onClick={()=>handleList(item._id)}>LIST</Button>
                                     <Badge variant="outline">{item.product_track}</Badge>
                                 </CardFooter>
                             </Card>
