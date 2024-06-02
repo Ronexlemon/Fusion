@@ -35,6 +35,9 @@ import {
 import { useSession } from "next-auth/react";
 import { useAccount } from "wagmi";
 import { CreateProduct } from "@/config/ApiConfig";
+import { useQuery } from "@tanstack/react-query";
+import { FUSIONBACKEND } from "@/constants/constant";
+import { FusionProduct } from "@/types/product";
 
 export default function UnlistedProducts() {
     const { data: session } = useSession();
@@ -66,6 +69,41 @@ export default function UnlistedProducts() {
             console.log("transaction error", error);
         }
     };
+
+    
+
+    //fetch
+    const getTotalTransaction = async () => {
+        try{
+            const res = await fetch(`${FUSIONBACKEND}/products/userUnlistedProducts`, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                credentials: "omit",
+              });
+              if (!res.ok) {
+                throw new Error("Failed to fetch properties");
+              }
+              return res.json();
+
+        }catch(error){
+            console.log("can't load data",error)
+
+        }
+        
+      };
+    
+
+
+      const { data, error, isLoading } = useQuery<FusionProduct[]>({
+        queryKey: ["properties"],
+        queryFn: getTotalTransaction,
+        enabled: !!token,
+      });
+    
+      console.log("data data", data);
 
     return (
         <div className="w-screen h-screen">
@@ -131,13 +169,15 @@ export default function UnlistedProducts() {
                         </AlertDialog>
                     </div>
                     <div className="w-full p-4 mt-16">
-                        {Products.map((item: ProductInterface, index: number) => (
-                            <Card key={item.product_id} className="gap-2 mb-4">
+                        {data?.map((item:FusionProduct, index: number) => (
+                            <Card key={item._id} className="gap-2 mb-4">
                                 <CardHeader>
                                     <CardTitle>{item.Product_name}</CardTitle>
-                                    <CardDescription className="flex flex-col justify-between items-start">
-                                        <div>{item.product_description}</div>
-                                        <div>{item.product_id}</div>
+                                    <CardDescription className="flex flex-row justify-between items-start">
+                                        <div>{item.Product_description}</div>
+                                        <div>{item._id}</div>
+                                        
+                                        <div>  {item.amount}</div>
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-2">
@@ -152,7 +192,8 @@ export default function UnlistedProducts() {
                                     </div>
                                 </CardContent>
                                 <CardFooter className="flex justify-between items-center">
-                                    <Badge variant="outline">{item.status}</Badge>
+                                <Button>LIST</Button>
+                                    <Badge variant="outline">{item.product_track}</Badge>
                                 </CardFooter>
                             </Card>
                         ))}
