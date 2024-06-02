@@ -21,6 +21,7 @@ import { SignInUserr, UserSignUp } from "@/config/ApiConfig"
 import { useRouter } from "next/router";
 import {useAccount} from "wagmi"
 import { useSession } from "next-auth/react";
+import { useRouter as useit } from "next/navigation";
 
 
 export function AuthPage() {
@@ -82,7 +83,7 @@ export function AuthPage() {
   };
 
   return (
-    <main className="bg-black  w-full h-screen flex justify-center items-center">
+    <main className="bg-black  w-full h-screen flex justify-center items-center relative">
         <Tabs defaultValue="login" className="w-[400px]">
       <TabsList className="grid w-full grid-cols-2 bg-gray-700">
         <TabsTrigger value="login">LOGIN</TabsTrigger>
@@ -143,6 +144,9 @@ export function AuthPage() {
         </Card>
       </TabsContent>
     </Tabs>
+    <div className="absolute bottom-16">
+      <Button  onClick={()=> router.push("/support")} variant="destructive">Support</Button>
+    </div>
 
     </main>
     
