@@ -133,8 +133,8 @@ const getAllBuyersSoldProducts =async(user_id)=>{
 }
 
 
-const confirmSoldProduct = async(user_id)=>{
-    const product = await Product.findOneAndUpdate({ buyer: user_id,_id:pro },{$set: {product_track: 'sold' // or another status based on your logic
+const confirmSoldProduct = async(user_id,product_id)=>{
+    const product = await Product.findOneAndUpdate({ buyer: user_id,_id:product_id },{$set: {product_track: 'sold' // or another status based on your logic
             }
         },
         { new: true } // Return the updated document

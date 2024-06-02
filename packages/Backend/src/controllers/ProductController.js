@@ -58,11 +58,13 @@ const getAvailableProductTotal = asyncHandler(async(req,res)=>{
 //confirm receive product
 
 const confirmReceivedProduct = asyncHandler(async(req,res)=>{
+
+    const {product_id} = req.body;
    
    
     try{
 
-        const transactions = await confirmSoldProduct(req.user.id);
+        const transactions = await confirmSoldProduct(req.user.id,product_id);
         if(!transactions){
             return res.status(404).json({
                 status:false,
