@@ -76,7 +76,8 @@ export default function SoldProducts() {
                             <Button onClick={()=> router.push("/market")}>Market</Button>
                             <Button onClick={()=> router.push("/delivery")}>Delivery</Button>
                             <Button className="bg-gray-300" onClick={()=> router.push("/sold")}>Sold</Button>
-                            <Button  onClick={()=> router.push("/unlisted")}>Unlisted</Button>
+                            <Button  onClick={()=> router.push("/send")}>Send</Button>
+
 
                         </div>
 

@@ -45,12 +45,12 @@ export default function MarketPlace() {
     const [userAddr,setUserAddress] = React.useState();
 
     //get phone number
-    const handleLookup = async (phone?:string) => {
+    const handleLookup = async (phone:string) => {
         console.log("user phone phone",phone)
         try {
             const res = await axios.get(`${FUSIONBACKEND}/auth/lookupquery`, {
                 params: {
-                    phoneNumber: phoneNumber
+                    phoneNumber: phone
                 }
             });
     
@@ -170,6 +170,7 @@ export default function MarketPlace() {
                             <Button   onClick={()=> router.push("/delivery")}>Delivery</Button>
                             <Button onClick={()=> router.push("/sold")}>Sold</Button>
                             <Button  onClick={()=> router.push("/unlisted")}>Unlisted</Button>
+                            <Button  onClick={()=> router.push("/send")}>Send</Button>
 
                         </div>
 

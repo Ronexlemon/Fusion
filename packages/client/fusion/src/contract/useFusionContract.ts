@@ -36,6 +36,18 @@ export const useFusionContract = ()=>{
         })
     }
 
+
+    const transfer = async(amount:bigint,address:string)=>{
+        const tx = await trade({
+            abi:CUSDABI,
+            address:CUSDCONTRACT,
+            functionName:"transfer",
+            args:[address,amount]
+            })
+    }
+
+
+
     const releasePaymentForTrade = async(productNo:string)=>{
         const tx = await trade({
             abi:FUSIONABI,
@@ -89,5 +101,5 @@ export const useFusionContract = ()=>{
 
     }
 
-    return{createATrade,releasePaymentForTrade,raiseDisputeForTrade,returnTradeToseller,returnTradeToBuyer,addDisputeResolver,approve}
+    return{createATrade,releasePaymentForTrade,raiseDisputeForTrade,returnTradeToseller,returnTradeToBuyer,addDisputeResolver,approve,transfer}
 }

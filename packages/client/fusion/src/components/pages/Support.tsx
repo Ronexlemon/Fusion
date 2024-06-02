@@ -11,8 +11,7 @@ export default function  SupportPage(){
     return(
         <main className="w-screen h-screen">
         <div className=" w-full h-full bg-gray-400 relative">
-            <h1 className="text-xl text-white">HEllo</h1>
-
+            
             <div className="flex  absolute bottom-16 right-4 left-4 gap-4">
                 <Input type="text" placeholder="just type your phone & productNumber"/>
                 <Button variant="destructive">SEND</Button>
