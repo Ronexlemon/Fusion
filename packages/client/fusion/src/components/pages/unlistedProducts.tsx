@@ -39,8 +39,10 @@ import { useQuery } from "@tanstack/react-query";
 import { FUSIONBACKEND } from "@/constants/constant";
 import { FusionProduct } from "@/types/product";
 import { ListProduct } from "@/config/ApiConfig";
+import { useRouter } from "next/navigation";
 
 export default function UnlistedProducts() {
+    const router = useRouter()
     const { data: session } = useSession();
     const [open, setOpen] = React.useState<boolean>(false);
     const [productName, setProductName] = React.useState<string>("");
@@ -128,9 +130,22 @@ export default function UnlistedProducts() {
         <div className="w-screen h-screen">
             <div className="h-full w-full">
                 <ScrollArea className="h-full w-full relative">
-                    <div className="absolute bottom-4 right-8">
+                    <div className="flex -flex-col absolute bottom-16 mb-5 right-8">
                         <Button onClick={() => setOpen(true)} className="rounded-full w-20 h-20 text-center" variant="destructive">ADD</Button>
-                    </div>
+                        </div>
+                        
+                        <div className="flex -flex-col absolute bottom-0 right-4 left-4">
+                        <div className="flex justify-between items-center w-full h-20">
+                            <Button onClick={()=> router.push("/")}>Account</Button>
+                            <Button onClick={()=> router.push("/market")}>Market</Button>
+                            <Button onClick={()=> router.push("/delivery")}>Delivery</Button>
+                            <Button onClick={()=> router.push("/sold")}>Sold</Button>
+                            <Button className="bg-gray-300" onClick={()=> router.push("/unlisted")}>Unlisted</Button>
+
+                        </div>
+
+                        </div>
+                    
                     <div className="flex justify-center items-center">
                         <AlertDialog open={open} onOpenChange={setOpen}>
                             <AlertDialogContent>

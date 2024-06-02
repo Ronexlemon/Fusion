@@ -23,11 +23,13 @@ import {
   import { useAccount } from "wagmi";
   import { FusionProduct } from "@/types/product"
 import { ConfirmReceivedProduct } from "@/config/ApiConfig"
-  
+import { useRouter } from "next/navigation";
+
 
 
 
 export default function OndeliveryProducts() {
+    const router = useRouter()
     const { data: session } = useSession();
     const { address, isConnected } = useAccount();
     const token = session?.user.accessToken as unknown as string;
@@ -81,7 +83,18 @@ export default function OndeliveryProducts() {
   return (
     <main className="w-screen h-screen">
         <div className="h-full w-full"> 
-        <ScrollArea className="h-full w-full ">
+        <ScrollArea className="h-full w-full relative ">
+        <div className="flex -flex-col absolute bottom-0 right-4 left-4">
+                        <div className="flex justify-between items-center w-full h-20">
+                            <Button onClick={()=> router.push("/")}>Account</Button>
+                            <Button onClick={()=> router.push("/market")}>Market</Button>
+                            <Button className="bg-gray-300"  onClick={()=> router.push("/delivery")}>Delivery</Button>
+                            <Button onClick={()=> router.push("/sold")}>Sold</Button>
+                            <Button  onClick={()=> router.push("/unlisted")}>Unlisted</Button>
+
+                        </div>
+
+                        </div>
       <div className="w-full p-4 mt-16">
         
         {data?.map((item:FusionProduct,index:number) => (
