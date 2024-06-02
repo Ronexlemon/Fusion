@@ -2,7 +2,7 @@ const express = require("express")
 
 const router = express.Router();
 
-const {getAllProductsBoughtByBuyer,getAllProductsConfirmedByBuyer,confirmReceivedProduct,getAllProductsForBuyer,getAvailableProductTotal,getAvailableProducts,getProducts,buyProductByUser,createAProduct,getTotalDelivery,getTotalForProductTrack,getdeliveryProducts,getsoldProductsAndPaymentReceived,listAproduct,getUnlistedProducts} = require("../controllers/ProductController")
+const {getAllProductsBoughtByBuyer,getAllProductsConfirmedByBuyer,confirmReceivedProduct,getAllProductsForBuyer,getAvailableProductTotal,getAvailableProducts,getProducts,buyProductByUser,createAProduct,getTotalDelivery,getTotalForProductTrack,getdeliveryProducts,getsoldProductsAndPaymentReceived,listAproduct,getUnlistedProducts,getAllProductsAvailable} = require("../controllers/ProductController")
 const {validateToken} = require("../middleware/handleJwtTokens")
 
 router.post("/create",validateToken,createAProduct)
@@ -20,6 +20,7 @@ router.post("/confirmReceivedProducts",validateToken,confirmReceivedProduct)
 router.get("/deliveryProducts",validateToken,getdeliveryProducts)
 router.get("/paidProducts",validateToken,getsoldProductsAndPaymentReceived)
 router.get("/buyerboughtproducts",validateToken,getAllProductsBoughtByBuyer)
+router.get("/availableProducts",getAllProductsAvailable)
 
 
 

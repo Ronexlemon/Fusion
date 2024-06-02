@@ -27,6 +27,10 @@ const getAllAvailableProducts = async(user_id)=>{
     const transactions = await Product.find({user:user_id, product_track:"available"})
     return transactions}
 
+    const getAvailableAllProducts = async()=>{
+        const transactions = await Product.find({ product_track:"available"})
+        return transactions}
+
 const getAllUnlistedProducts = async(user_id)=>{
     const transactions = await Product.find({user:user_id, product_track:"unlisted"})
     return transactions}
@@ -160,7 +164,7 @@ module.exports = {
    getAllSoldProduct,
    listProduct,
    getAllUnlistedProducts,
-   
+   getAvailableAllProducts
 
 
 }

@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler")
 
-const {createProduct,getAllUnlistedProducts,listProduct,getAllAvailabeProductTotal,getAllAvailableProducts,getAllBuyersProducts,getAllBuyersBoughtProducts,getAllBuyersSoldProducts,getAllDeliveryProductTotal,getAllSoldProduct,buyProduct,getAllSoldProducts,getAllTotal,getAllUserDeliveryProducts,getAllUserProducts,confirmSoldProduct} = require("../services/product/product")
+const {createProduct,getAllUnlistedProducts,listProduct,getAllAvailabeProductTotal,getAllAvailableProducts,getAllBuyersProducts,getAllBuyersBoughtProducts,getAllBuyersSoldProducts,getAllDeliveryProductTotal,getAllSoldProduct,getAvailableAllProducts,buyProduct,getAllSoldProducts,getAllTotal,getAllUserDeliveryProducts,getAllUserProducts,confirmSoldProduct} = require("../services/product/product")
 
 
 
@@ -138,6 +138,29 @@ const getAvailableProducts = asyncHandler(async(req,res)=>{
     try{
 
         const transactions = await getAllAvailableProducts(req.user.id);
+        if(!transactions || transactions.length ==0){
+            return res.status(404).json({
+                status:false,
+                message:"No Product found"
+            })
+        }
+        return res.status(200).json(
+            transactions
+        );
+    }catch(error){
+        return res.status(500).json({message:"please try another time"})
+
+    }
+
+    
+})
+
+
+const getAllProductsAvailable = asyncHandler(async(req,res)=>{
+    
+    try{
+
+        const transactions = await getAvailableAllProducts();
         if(!transactions || transactions.length ==0){
             return res.status(404).json({
                 status:false,
@@ -385,7 +408,8 @@ module.exports ={createAProduct,
     confirmReceivedProduct,
     getAvailableProductTotal,
     listAproduct,
-    getUnlistedProducts
+    getUnlistedProducts,
+    getAllProductsAvailable
 
 
 
