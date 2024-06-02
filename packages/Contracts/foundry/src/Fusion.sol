@@ -4,9 +4,10 @@ pragma solidity ^0.8.2;
 import "./IFusion.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+
 contract FusionEscrow is  IFusion {
 
- address public token = 0x874069fa1eb16d44d622f2e0ca25eea172369bc1;
+ address public token = 0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
 
  address[] public disputeManagers;
 
