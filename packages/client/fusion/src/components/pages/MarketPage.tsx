@@ -25,14 +25,80 @@ import {
 import { BuyProduct } from "@/config/ApiConfig"
 import { useRouter } from "next/navigation";
 
+import { useFusionContract } from "@/contract/useFusionContract"
+import { etherUnits } from "viem"
+import {ethers,parseEther} from "ethers"
+import axios from 'axios';
 
 
 
 export default function MarketPlace() {
+    const {
+        createATrade,approve        
+      } = useFusionContract();
     const router = useRouter()
+    const [phoneNumber,setPhoneNumber] =React.useState<string>("254700000011")    
     const { data: session } = useSession();
     const { address, isConnected } = useAccount();
+    const [userData, setUserData] = React.useState(null);
     const token = session?.user.accessToken as unknown as string;
+    const [userAddr,setUserAddress] = React.useState();
+
+    //get phone number
+    const handleLookup = async (phone?:string) => {
+        console.log("user phone phone",phone)
+        try {
+            const res = await axios.get(`${FUSIONBACKEND}/auth/lookupquery`, {
+                params: {
+                    phoneNumber: phoneNumber
+                }
+            });
+    
+            const result = res.data[0];
+            console.log(result);
+            return result;
+        } catch (error) {
+            console.error('Error fetching user address:', error);
+        }
+    };
+    
+    const fetchUserAddress = async () => {
+        try {
+            
+            
+            const res = await fetch(`${FUSIONBACKEND}/auth/lookup`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ phoneNumber:"+254700000011" }),
+                credentials: "omit",
+            });
+            
+            if (!res.ok) {
+                throw new Error("Failed to fetch user address");
+            }
+            
+            const result = await res.json();
+            console.log(result);
+            setUserData(result);
+            return await res.json()
+
+             // Save the result to the state
+        } catch (error) {
+            console.error("Can't load data", error);
+        }
+    };
+        //   const { data:userAdd } = useQuery<string>({
+        //     queryKey: ["pphone"],
+        //     queryFn:fetchUserAddress,
+        //      enabled: !!phoneNumber,
+        //   });
+      
+        //   console.log("user address",userAdd)
+          console.log("userData",userData)
+         
+      
     //fetch
     const getTotalTransaction = async () => {
         try{
@@ -66,21 +132,33 @@ export default function MarketPlace() {
     
       console.log("data data", data);
       //handle list
-    const handleBuy = async (product_id:string) => {
+      const handleBuy = async (product_id: string, phone_Number: string, amount?: string) => {
+        setPhoneNumber(phone_Number);
+        const getAdd = await handleLookup(phone_Number);
+        console.log('getAddress', typeof(getAdd));
         try {
+            if (!getAdd || getAdd === '') {
+                console.log("No phone number provided or invalid address.");
+                return;
+            }
             console.log("Listing ......");
             const result = await BuyProduct({
-                product_id: product_id,                
+                product_id: product_id,
                 token: token
             });
             console.log("Transaction result status:", result?.status);
-            if (result?.status == 200) {
+            if (result?.status === 200) {
+                await approve(parseEther("1"));
+                if (typeof getAdd === 'string') { // Ensure getAdd is a string
+                    await createATrade(parseEther("1"), getAdd, product_id);
+                }
                 console.log(result);
             }
         } catch (error) {
-            console.log("transaction error", error);
+            console.log("Transaction error", error);
         }
     };
+    
   return (
     <main className="w-screen h-screen">
         <div className="h-full w-full"> 
@@ -136,7 +214,7 @@ export default function MarketPlace() {
           </CardContent>
           <CardFooter className="flex justify-between items-center">
             
-            <Button onClick={()=>handleBuy(item._id)}>Buy</Button>
+            <Button onClick={()=>handleBuy(item._id,"+254700000011")}>Buy</Button>
             <Badge variant="outline">{item.product_track}</Badge>
 
           </CardFooter>

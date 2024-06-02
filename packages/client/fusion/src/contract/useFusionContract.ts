@@ -1,19 +1,21 @@
 import { FUSIONCONTRACT } from "@/constants/constant";
+import { CUSDCONTRACT } from "@/constants/constant";
 
 import { useReadContract,useWriteContract } from "wagmi";
 
 import FUSIONABI from "../abi/fusion.json"
+import CUSDABI from "../abi/IERC20.json"
 type hexstring ={
     address: `0x${string}`
 }
 
 
-const useFusionContract = async()=>{
+export const useFusionContract = ()=>{
 
     //write contracts
     const {writeContractAsync:trade}  = useWriteContract();
 
-    const createATrade = async(amount:bigint,sellerAddress:hexstring,productNo:string)=>{
+    const createATrade = async(amount:bigint,sellerAddress:string,productNo:string)=>{
         const tx = await trade({
             abi:FUSIONABI,
             address:FUSIONCONTRACT,
@@ -23,6 +25,15 @@ const useFusionContract = async()=>{
         
 
 
+    }
+
+    const approve = async(amout:bigint)=>{
+        const tx = await trade({
+            abi:CUSDABI,
+            address:CUSDCONTRACT,
+            functionName:"approve",
+            args:[FUSIONCONTRACT,amout]
+        })
     }
 
     const releasePaymentForTrade = async(productNo:string)=>{
@@ -78,5 +89,5 @@ const useFusionContract = async()=>{
 
     }
 
-    return{createATrade,releasePaymentForTrade,raiseDisputeForTrade,returnTradeToseller,returnTradeToBuyer,addDisputeResolver}
+    return{createATrade,releasePaymentForTrade,raiseDisputeForTrade,returnTradeToseller,returnTradeToBuyer,addDisputeResolver,approve}
 }
