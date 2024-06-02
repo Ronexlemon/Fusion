@@ -57,6 +57,7 @@ class ASv2 {
   }
 
   async lookupAddresses(phoneNumber) {
+    await this.checkAndTopUpODISQuota()
     // get identifier from phone number using ODIS
     const { obfuscatedIdentifier } = await OdisUtils.Identifier.getObfuscatedIdentifier(
       phoneNumber,
