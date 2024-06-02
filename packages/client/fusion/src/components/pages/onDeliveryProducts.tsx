@@ -17,30 +17,87 @@ import {
   import { Button } from "../ui/button"
   import { Products } from "@/helpers/data"
   import { ProductInterface } from "@/helpers/data"
+  import { useQuery } from "@tanstack/react-query";
+  import { useSession } from "next-auth/react";
+  import { FUSIONBACKEND } from "@/constants/constant";
+  import { useAccount } from "wagmi";
+  import { FusionProduct } from "@/types/product"
+import { ConfirmReceivedProduct } from "@/config/ApiConfig"
   
 
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-)
+
 
 export default function OndeliveryProducts() {
+    const { data: session } = useSession();
+    const { address, isConnected } = useAccount();
+    const token = session?.user.accessToken as unknown as string;
+    const getTotalTransaction = async () => {
+        try{
+            const res = await fetch(`${FUSIONBACKEND}/products/deliveryProducts`, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                credentials: "omit",
+              });
+              if (!res.ok) {
+                throw new Error("Failed to fetch properties");
+              }
+              return res.json();
+
+        }catch(error){
+            console.log("can't load data",error)
+
+        }
+        
+      };
+    
+
+
+      const { data, error, isLoading } = useQuery<FusionProduct[]>({
+        queryKey: ["properties"],
+        queryFn: getTotalTransaction,
+         enabled: !!token,
+      });
+    
+      console.log("data data", data);
+
+      const handleConfirm = async (product_id:string) => {
+        try {
+            console.log("confirming ......");
+            const result = await ConfirmReceivedProduct({
+                product_id: product_id,                
+                token: token
+            });
+            console.log("Transaction result status:", result?.status);
+            if (result?.status == 200) {
+                console.log(result);
+            }
+        } catch (error) {
+            console.log("transaction error", error);
+        }
+    };
   return (
     <main className="w-screen h-screen">
         <div className="h-full w-full"> 
         <ScrollArea className="h-full w-full ">
       <div className="w-full p-4 mt-16">
         
-        {Products.map((item:ProductInterface,index:number) => (
+        {data?.map((item:FusionProduct,index:number) => (
           <>
-            <Card className="gap-2 mb-4">
+            <Card key={item._id} className="gap-2 mb-4">
           <CardHeader>
             <CardTitle>{item.Product_name}</CardTitle>
             <CardDescription className="flex flex-col justify-between items-start">
                 <div>
-                {item.product_description}
+                {item.Product_description}
                 </div>
                 <div>
-                {item.product_id}
+                {item._id}
+                </div>
+                <div>
+                {item.amount}
                 </div>
              
             </CardDescription>
@@ -59,8 +116,8 @@ export default function OndeliveryProducts() {
           </CardContent>
           <CardFooter className="flex justify-between items-center">
             
-            <Button variant="destructive">Confirm</Button>
-            <Badge variant="outline">{item.status}</Badge>
+            <Button onClick={()=>handleConfirm(item._id)} variant="destructive">Confirm</Button>
+            <Badge variant="outline">{item.product_track}</Badge>
 
           </CardFooter>
         </Card>

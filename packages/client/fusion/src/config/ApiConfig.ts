@@ -123,4 +123,23 @@ export const SignInUserr = async (userDetails: dataSignInUser) => {
   };
 
 
+  export const ConfirmReceivedProduct = async (transactionDetails: ProductList) => {
+    try {
+      const res = await fetch("api/confirm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          product_id:transactionDetails.product_id,
+           token:transactionDetails.token
+        }),
+      });
+      return res;
+    } catch (error) {
+      console.log("failed to register", error);
+    }
+  };
+
+
   
