@@ -38,7 +38,7 @@ export default async function handler(
         
       },
       body: JSON.stringify({
-        phoneNumber: `+254${phoneNumber}`,
+        phoneNumber: `+${phoneNumber}`,
         password:password ,
         userAddress:address
         
