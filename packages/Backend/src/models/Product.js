@@ -16,6 +16,11 @@ const  ProductSchema = new Schema({
         required:true
 
       },
+      seller_phonenumber:{
+        type:String,
+        required:true
+
+      },
         
     Product_Image:{
         type:String,

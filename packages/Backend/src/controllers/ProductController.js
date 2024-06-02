@@ -9,10 +9,10 @@ const createAProduct = asyncHandler(async(req,res)=>{
    // user_id,product_track,amount,product_image,
    
     
-    const {product_name,product_description,amount,product_image} = req.body;
+    const {product_name,product_description,amount,product_image,seller_phonenumber} = req.body;
     try{
 
-        const transaction = await createProduct(req.user.id,product_name,product_description,amount,product_image);
+        const transaction = await createProduct(req.user.id,product_name,product_description,amount,product_image,seller_phonenumber);
         if(!transaction || transaction.length ==0){
             return res.status(404).json({
                 status:false,

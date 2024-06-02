@@ -1,14 +1,15 @@
 const Product = require('../../models/Product')
 
 
-const createProduct = async(user_id,Product_name,Product_description,amount,product_image)=>{
+const createProduct = async(user_id,Product_name,Product_description,amount,product_image,seller_phonenumber)=>{
 
     const transaction = new Product({
         user: user_id,
         amount:amount,       
         product_image: product_image,
         Product_name:Product_name,
-        Product_description:Product_description
+        Product_description:Product_description,
+        seller_phonenumber:seller_phonenumber
         // product_no:product_no,
     })
     return transaction;
