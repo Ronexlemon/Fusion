@@ -17,30 +17,77 @@ import {
   import { Button } from "../ui/button"
   import { Products } from "@/helpers/data"
   import { ProductInterface } from "@/helpers/data"
+  import { useQuery } from "@tanstack/react-query";
+  import { useSession } from "next-auth/react";
+  import { FUSIONBACKEND } from "@/constants/constant";
+  import { useAccount } from "wagmi";
+  import { FusionProduct } from "@/types/product"
   
 
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-)
+
 
 export default function MarketPlace() {
+    const { data: session } = useSession();
+    const { address, isConnected } = useAccount();
+    const token = session?.user.accessToken as unknown as string;
+    //fetch
+    const getTotalTransaction = async () => {
+        try{
+            const res = await fetch(`${FUSIONBACKEND}/products/availableProducts`, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                //   Authorization: `Bearer ${token}`,
+                },
+                credentials: "omit",
+              });
+              if (!res.ok) {
+                throw new Error("Failed to fetch properties");
+              }
+              return res.json();
+
+        }catch(error){
+            console.log("can't load data",error)
+
+        }
+        
+      };
+    
+
+
+      const { data, error, isLoading } = useQuery<FusionProduct[]>({
+        queryKey: ["properties"],
+        queryFn: getTotalTransaction,
+        // enabled: !!token,
+      });
+    
+      console.log("data data", data);
   return (
     <main className="w-screen h-screen">
         <div className="h-full w-full"> 
         <ScrollArea className="h-full w-full ">
       <div className="w-full p-4 mt-16">
         
-        {Products.map((item:ProductInterface,index:number) => (
+        {data?.map((item:FusionProduct,index:number) => (
           <>
-            <Card className="gap-2 mb-4">
+            <Card key={item._id} className="gap-2 mb-4">
           <CardHeader>
             <CardTitle>{item.Product_name}</CardTitle>
             <CardDescription className="flex flex-col justify-between items-start">
-                <div>
-                {item.product_description}
+                <div className="flex justify-between items-center w-full">
+                    <span>description</span>
+                    <span>{item.Product_description}</span>
+                
                 </div>
-                <div>
-                {item.product_id}
+                <div  className="flex justify-between items-center w-full">
+                <span>ID</span>
+                <span>{item._id}</span>
+                
+                </div>
+                <div  className="flex justify-between items-center w-full">
+                <span>Price</span>
+                <span>{item.amount}</span>
+                
                 </div>
              
             </CardDescription>
@@ -60,7 +107,7 @@ export default function MarketPlace() {
           <CardFooter className="flex justify-between items-center">
             
             <Button>Buy</Button>
-            <Badge variant="outline">{item.status}</Badge>
+            <Badge variant="outline">{item.product_track}</Badge>
 
           </CardFooter>
         </Card>
