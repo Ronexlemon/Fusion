@@ -119,4 +119,23 @@ const lookup = asyncHandler(async (req, res) => {
 });
 
 
-module.exports = { register, login,lookup };
+const lookupPhoneNumber = asyncHandler(async (req, res) => {
+    const { mapPhoneNumber, lookupForAddresses } = await useSocialConnect();
+    const { phoneNumber } = req.query; // Read phoneNumber from query parameters
+
+    try {
+        // Lookup user address by phone number
+        const userAdd = await lookupForAddresses(phoneNumber);
+        
+        return res.status(200).json(userAdd);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            error
+        });
+    }
+});
+
+
+module.exports = { register, login,lookup,lookupPhoneNumber };
