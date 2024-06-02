@@ -22,6 +22,7 @@ import {
   import { FUSIONBACKEND } from "@/constants/constant";
   import { useAccount } from "wagmi";
   import { FusionProduct } from "@/types/product"
+import { BuyProduct } from "@/config/ApiConfig"
   
 
 
@@ -62,6 +63,22 @@ export default function MarketPlace() {
       });
     
       console.log("data data", data);
+      //handle list
+    const handleBuy = async (product_id:string) => {
+        try {
+            console.log("Listing ......");
+            const result = await BuyProduct({
+                product_id: product_id,                
+                token: token
+            });
+            console.log("Transaction result status:", result?.status);
+            if (result?.status == 200) {
+                console.log(result);
+            }
+        } catch (error) {
+            console.log("transaction error", error);
+        }
+    };
   return (
     <main className="w-screen h-screen">
         <div className="h-full w-full"> 
@@ -106,7 +123,7 @@ export default function MarketPlace() {
           </CardContent>
           <CardFooter className="flex justify-between items-center">
             
-            <Button>Buy</Button>
+            <Button onClick={()=>handleBuy(item._id)}>Buy</Button>
             <Badge variant="outline">{item.product_track}</Badge>
 
           </CardFooter>
