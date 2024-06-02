@@ -8,7 +8,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 //import connect from "@/utils/db";
 import type { NextAuthOptions } from "next-auth";
 //import type { NextAuthConfig } from "next-auth"
-import { FUSIONBACKEND } from "@/constants/constant";
+import { FUSIONBACKEND } from "@/app/constants/constant";
 export default NextAuth({
   // Configure one or more authentication providers
   providers: [

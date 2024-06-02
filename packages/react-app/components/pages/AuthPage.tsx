@@ -16,10 +16,9 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
-
 export function AuthPage() {
   return (
-    <main className="bg-black  w-full h-screen flex justify-center items-center">
+    <main className="">
         <Tabs defaultValue="login" className="w-[400px]">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="login">LOGIN</TabsTrigger>

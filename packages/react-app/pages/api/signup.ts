@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { FUSIONBACKEND } from "@/constants/constant";
+import { FUSIONBACKEND } from "@/app/constants/constant";
 
 type TransactionData = {
   phoneNumber: string;
