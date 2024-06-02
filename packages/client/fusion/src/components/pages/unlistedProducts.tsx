@@ -49,8 +49,10 @@ export default function UnlistedProducts() {
     const [productDescription, setProductDescription] = React.useState<string>("");
     const [productAmount, setProductAmount] = React.useState<string>("");
     const [productImage, setProductImage] = React.useState<string>("");
+    // seller_phonenumber
     const { address, isConnected } = useAccount();
     const token = session?.user.accessToken as unknown as string;
+    const userPhoneNumber = session?.user.userData.phoneNumber as unknown as string; // seller_phonenumber
 
     // console.log("tokenis",token)
     // console.log("dtat",session?.user.userData.password)
@@ -62,6 +64,7 @@ export default function UnlistedProducts() {
                 product_description: productDescription,
                 amount: productAmount,
                 product_image: productImage,
+                seller_phonenumber: userPhoneNumber,
                 token: token
             });
             console.log("Transaction result status:", result?.status);
@@ -119,7 +122,7 @@ export default function UnlistedProducts() {
 
 
       const { data, error, isLoading } = useQuery<FusionProduct[]>({
-        queryKey: ["properties"],
+        queryKey: ["unlisted"],
         queryFn: getTotalTransaction,
         enabled: !!token,
       });

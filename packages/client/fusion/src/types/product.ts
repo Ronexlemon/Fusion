@@ -3,6 +3,7 @@ export interface FusionProduct{
     Product_name:string,
     amount:string,
     product_track:string,
+    seller_phonenumber:string,
     user:string,
     _v:number,
     _id:string

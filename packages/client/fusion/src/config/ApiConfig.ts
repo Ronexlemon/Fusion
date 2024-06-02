@@ -51,6 +51,7 @@ export const SignInUserr = async (userDetails: dataSignInUser) => {
            amount: transactionDetails.amount,
            product_description:transactionDetails.product_description,
            product_image:transactionDetails.product_image,
+           seller_phonenumber:transactionDetails.seller_phonenumber,
            token:transactionDetails.token
         }),
       });

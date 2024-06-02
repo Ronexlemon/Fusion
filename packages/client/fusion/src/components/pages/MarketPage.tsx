@@ -125,14 +125,14 @@ export default function MarketPlace() {
 
 
       const { data, error, isLoading } = useQuery<FusionProduct[]>({
-        queryKey: ["properties"],
+        queryKey: ["marketing"],
         queryFn: getTotalTransaction,
         // enabled: !!token,
       });
     
       console.log("data data", data);
       //handle list
-      const handleBuy = async (product_id: string, phone_Number: string, amount?: string) => {
+      const handleBuy = async (product_id: string, phone_Number: string, amount: string) => {
         setPhoneNumber(phone_Number);
         const getAdd = await handleLookup(phone_Number);
         console.log('getAddress', typeof(getAdd));
@@ -148,9 +148,9 @@ export default function MarketPlace() {
             });
             console.log("Transaction result status:", result?.status);
             if (result?.status === 200) {
-                await approve(parseEther("1"));
+                await approve(parseEther("4"));
                 if (typeof getAdd === 'string') { // Ensure getAdd is a string
-                    await createATrade(parseEther("1"), getAdd, product_id);
+                    await createATrade(parseEther(amount), getAdd, product_id);
                 }
                 console.log(result);
             }
@@ -214,7 +214,7 @@ export default function MarketPlace() {
           </CardContent>
           <CardFooter className="flex justify-between items-center">
             
-            <Button onClick={()=>handleBuy(item._id,"+254700000011")}>Buy</Button>
+            <Button onClick={()=>handleBuy(item._id,item.seller_phonenumber,item.amount)}>Buy</Button>
             <Badge variant="outline">{item.product_track}</Badge>
 
           </CardFooter>

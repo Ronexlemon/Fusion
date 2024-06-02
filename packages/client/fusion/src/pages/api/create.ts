@@ -7,6 +7,7 @@ export type ProductData = {
   product_description:string;
   amount:string;
   product_image:string;
+  seller_phonenumber:string,
   token:string
 };
 
@@ -25,7 +26,7 @@ export default async function handler(
       return res.status(405).json({ success: false, message: "Method Not Allowed" });
     }
 
-    const {product_name,product_description,amount,product_image,token}: ProductData = req.body;
+    const {product_name,product_description,amount,product_image,seller_phonenumber,token}: ProductData = req.body;
 
     // Perform any necessary validation of transaction data here
 
@@ -41,6 +42,7 @@ export default async function handler(
         product_name: product_name,
         amount: amount,
         product_description: product_description,
+        seller_phonenumber:seller_phonenumber,
         product_image:product_image
       }),
     });

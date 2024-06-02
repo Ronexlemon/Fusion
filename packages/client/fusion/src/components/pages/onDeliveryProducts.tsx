@@ -24,11 +24,13 @@ import {
   import { FusionProduct } from "@/types/product"
 import { ConfirmReceivedProduct } from "@/config/ApiConfig"
 import { useRouter } from "next/navigation";
+import { useFusionContract } from "@/contract/useFusionContract"
 
 
 
 
 export default function OndeliveryProducts() {
+    const {createATrade,releasePaymentForTrade,raiseDisputeForTrade} =useFusionContract()
     const router = useRouter()
     const { data: session } = useSession();
     const { address, isConnected } = useAccount();
@@ -58,12 +60,21 @@ export default function OndeliveryProducts() {
 
 
       const { data, error, isLoading } = useQuery<FusionProduct[]>({
-        queryKey: ["properties"],
+        queryKey: ["delivery"],
         queryFn: getTotalTransaction,
          enabled: !!token,
       });
     
       console.log("data data", data);
+
+      const handleRaiseIssue = async(product_id:string)=>{
+        try{
+         await raiseDisputeForTrade(product_id);
+
+        }catch(error){
+            console.log("can't load data",error)
+        }
+      }
 
       const handleConfirm = async (product_id:string) => {
         try {
@@ -74,6 +85,7 @@ export default function OndeliveryProducts() {
             });
             console.log("Transaction result status:", result?.status);
             if (result?.status == 200) {
+                await releasePaymentForTrade(product_id)
                 console.log(result);
             }
         } catch (error) {
@@ -130,7 +142,9 @@ export default function OndeliveryProducts() {
           <CardFooter className="flex justify-between items-center">
             
             <Button onClick={()=>handleConfirm(item._id)} variant="destructive">Confirm</Button>
+            
             <Badge variant="outline">{item.product_track}</Badge>
+            <Button  onClick={()=>handleRaiseIssue(item._id)} variant="raise">Dispute</Button>
 
           </CardFooter>
         </Card>

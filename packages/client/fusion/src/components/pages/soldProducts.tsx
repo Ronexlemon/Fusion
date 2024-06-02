@@ -60,7 +60,7 @@ export default function SoldProducts() {
 
 
       const { data, error, isLoading } = useQuery<FusionProduct[]>({
-        queryKey: ["properties"],
+        queryKey: ["sold"],
         queryFn: getTotalTransaction,
          enabled: !!token,
       });
