@@ -14,7 +14,8 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
-         <li><a href="#escrow-contract">Smart conract Escrow</a></li>
+         <li><a href="#escrow-contract">Escrow  Flow</a></li>
+         <li><a href="#smart-contract">Smart conract Escrow</a></li>
       </ul>
     </li>
     <li>
@@ -58,6 +59,9 @@ Fusion is built using cutting-edge technologies to ensure a seamless and secure 
 - [React.js](https://reactjs.org/)
 - [Next.js](https://nextjs.org/)
 - [Social connect](https://github.com/celo-org/SocialConnect/)
+## Smart Contract 
+
+Fusion utilizes a smart contract escrow system to manage payments and ensure secure transactions. The smart contract used can be found [here](https://github.com/Ronexlemon/Fusion/blob/master/packages/Contracts/hardhat/contracts/Fusion.sol).
 
 ## Escrow Contract
 
